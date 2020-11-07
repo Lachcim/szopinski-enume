@@ -1,3 +1,8 @@
+% ENUME MICHAL SZOPINSKI
+% PROJECT A NUMBER 62
+% TASK 2
+% https://github.com/Lachcim/szopinski-enume
+
 % define maximum feasible equation count (10 * 2^n)
 maxeqcount = 5;
 
