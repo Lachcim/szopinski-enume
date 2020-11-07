@@ -89,6 +89,9 @@ function eqsys = gausseli(eqsys)
             % calculate reductor constant and perform reduction
             reductor = eqsys(row, col) / eqsys(col, col);
             eqsys(row, :) = eqsys(row, :) - eqsys(col, :) * reductor;
+            
+            % simulate perfect reduction
+            eqsys(row, col) = 0;
         end
     end
 end
