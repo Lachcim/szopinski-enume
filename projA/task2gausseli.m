@@ -22,10 +22,16 @@ for task = 'ab'
         
         % note the error
         error = norm(A * result - b);
-        errors(equationspow + 1, :) = [equationspow, error];
+        errors(equationspow + 1, :) = [equationcount, error];
     end
     
-    disp(errors);
+    % plot error data
+    figure;
+    plot(errors(:, 1), errors(:, 2), '-o');
+    title(['Linear equation system solution error (subtask ', task, ')']);
+    xlabel('Equation count');
+    ylabel('Error');
+    grid on;
 end
 
 % generates coefficient matrix for task A or B
