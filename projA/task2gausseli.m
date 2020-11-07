@@ -1,5 +1,5 @@
 % define maximum feasible equation count (10 * 2^n)
-maxeqcount = 6;
+maxeqcount = 5;
 
 % perform calculation for both sub-tasks
 for task = 'ab'
