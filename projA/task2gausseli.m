@@ -1,4 +1,14 @@
-q = genvector('2', 10);
+% perform calculation for both sub-tasks
+for task = 'ab'
+    % generate coefficient matrix A and vector b
+    A = genmatrix(task, 5);
+    b = genvector(task, 5);
+    eqsys = [A, b];
+    
+    disp(eqsys)
+    eqsys = gausselim(eqsys);
+    disp(eqsys)
+end
 
 % generates coefficient matrix for task A or B
 function output = genmatrix(task, size)
@@ -37,4 +47,16 @@ function output = genvector(task, size)
            output(i) = 1 / (3 * i);
        end
    end
+end
+
+% performs gaussian elimnation
+function eqsys = gausselim(eqsys)
+    % for every column, eliminate (size - column) coefficients
+    for col = 1:size(eqsys, 1)
+        for row = (col + 1):size(eqsys, 1)
+            % calculate reductor constant and perform reduction
+            reductor = eqsys(row, col) / eqsys(col, col);
+            eqsys(row, :) = eqsys(row, :) - eqsys(col, :) * reductor;
+        end
+    end
 end
