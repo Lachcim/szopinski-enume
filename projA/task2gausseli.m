@@ -54,6 +54,20 @@ end
 function eqsys = gausseli(eqsys)
     % for every column, eliminate (size - column) coefficients
     for col = 1:size(eqsys, 1)
+        % partial pivoting - find best row
+        bestrow = 0;
+        bestscore = 0;
+        for row = col:size(eqsys, 1)
+            score = abs(eqsys(row, col));
+            if score > bestscore
+                bestrow = row;
+                bestscore = score;
+            end
+        end
+        
+        % swap first row and best row
+        eqsys([col, bestrow], :) = eqsys([bestrow, col], :);
+        
         for row = (col + 1):size(eqsys, 1)
             % calculate reductor constant and perform reduction
             reductor = eqsys(row, col) / eqsys(col, col);
