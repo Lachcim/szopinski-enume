@@ -23,6 +23,12 @@ for task = 'ab'
         % note the error
         error = norm(A * result - b);
         errors(equationspow + 1, :) = [equationcount, error];
+        
+        % print solution for 10 equations
+        if equationspow == 0
+            disp(['Solution to subtask ', task ', 10 equations:']);
+            disp([(1:10)', result, A * result - b]);
+        end
     end
     
     % plot error data
