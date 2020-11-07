@@ -1,14 +1,31 @@
+% define maximum feasible equation count (10 * 2^n)
+maxeqcount = 6;
+
 % perform calculation for both sub-tasks
 for task = 'ab'
-    % generate coefficient matrix A and vector b
-    A = genmatrix(task, 5);
-    b = genvector(task, 5);
-    eqsys = [A, b];
+    % collect error values for different equation counts
+    errors = zeros(maxeqcount + 1, 2);
     
-    % perform gaussian elimination and back-substitution
-    eqsys = gausseli(eqsys);
-    eqsys = backsubst(eqsys);
-    disp([eqsys, A\b]);
+    % perform calculation for increasing number of equations
+    for equationspow = 0:maxeqcount
+        equationcount = 10 * 2^equationspow;
+        
+        % generate coefficient matrix A and vector b
+        A = genmatrix(task, equationcount);
+        b = genvector(task, equationcount);
+        eqsys = [A, b];
+        
+        % perform gaussian elimination and back-substitution
+        eqsys = gausseli(eqsys);
+        eqsys = backsubst(eqsys);
+        result = eqsys(:, size(eqsys, 2));
+        
+        % note the error
+        error = norm(A * result - b);
+        errors(equationspow + 1, :) = [equationspow, error];
+    end
+    
+    disp(errors);
 end
 
 % generates coefficient matrix for task A or B
