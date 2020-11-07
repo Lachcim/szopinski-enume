@@ -6,7 +6,7 @@ for task = 'ab'
     eqsys = [A, b];
     
     disp(eqsys)
-    eqsys = gausselim(eqsys);
+    eqsys = gausseli(eqsys);
     disp(eqsys)
 end
 
@@ -50,7 +50,7 @@ function output = genvector(task, size)
 end
 
 % performs gaussian elimnation
-function eqsys = gausselim(eqsys)
+function eqsys = gausseli(eqsys)
     % for every column, eliminate (size - column) coefficients
     for col = 1:size(eqsys, 1)
         for row = (col + 1):size(eqsys, 1)
