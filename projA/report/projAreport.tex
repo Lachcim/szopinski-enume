@@ -1,5 +1,6 @@
 \documentclass{article}
 
+\usepackage{amsmath}
 \setlength{\parskip}{1em}
 
 \begin{document}
@@ -9,6 +10,8 @@
 	\author{Michał Szopiński\\\\https://github.com/Lachcim/szopinski-enume}
 	\date{November 12, 2020}
 	\maketitle
+	
+	\numberwithin{equation}{section}
 	
 	\setcounter{section}{-1}
 	\section{Abstract}
@@ -25,4 +28,46 @@
 		algorithms
 	\end{itemize}
 	
+	\newpage
+	
+	\section{Task 1: Computing the machine epsilon}
+	
+	\subsection{Overview}
+	
+	The goal of this task was to find the machine epsilon of the MATLAB
+	environment, i.e. the maximum relative error of a floating-point
+	representation of a number.
+	
+	\subsection{Implementation}
+	
+	The computation of the machine epsilon is based on the following two
+	observations:
+	
+	\begin{enumerate}
+		\item In binary computer environments, the epsilon is a negative power
+		of two.
+		\item The machine epsilon can also be expressed as:
+		\begin{equation}
+			eps = \min\{x \in M: fl(1 + x) > 1 \land x > 0\}
+		\end{equation}
+		i.e. the smallest representable number such that, when added to $1$,
+		has a floating point representation greater than $1$.
+	\end{enumerate}
+	
+	An arbitrary starting point, in this case $2^0$, can thus be chosen, and its
+	value can then be sequentially halved until the criterion $fl(1 + x) > 1$ is
+	no longer met.
+	
+	\subsection{Program output}
+	
+	\begin{verbatim}
+		Found epsilon is 2.2204e-16
+		Epsilon is 2.2204e-16
+	\end{verbatim}
+	
+	\subsection{Observations}
+	
+	An epsilon of $2.2204 \cdot 10^{-16} = 2^{-52}$ is indicative of a standard
+	double-precision IEEE 754 floating point binary representation.
+
 \end{document}
