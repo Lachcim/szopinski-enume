@@ -22,6 +22,9 @@ for alg = 1:size(algorithms, 1)
     
     % find solution and step errors using the given algorithm
     [solution, errors] = algfunc(taskA, taskb);
+    disp(['Solution using ', algname, ':']);
+    disp(solution);
+    disp(['Error: ', num2str(errors(size(errors, 2)))]);
     
     % plot error data
     figure;
