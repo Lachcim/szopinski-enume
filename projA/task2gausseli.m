@@ -26,13 +26,35 @@ for task = 'ab'
         result = eqsys(:, size(eqsys, 2));
         
         % note the error
-        error = norm(A * result - b);
+        errorvector = A * result - b;
+        error = norm(errorvector);
         errors(equationspow + 1, :) = [equationcount, error];
         
-        % print solution for 10 equations
+        % additional calculations for 10 equations
         if equationspow == 0
+            % print solution
             disp(['Solution to subtask ', task ', 10 equations:']);
-            disp([(1:10)', result, A * result - b]);
+            disp([(1:10)', result, errorvector]);
+            disp(['Error: ', num2str(error)]);
+            
+            % residual correction: calculate deltax and correct result
+            for i = 1:10
+                eqsys = [A, A * result - b];
+                eqsys = gausseli(eqsys);
+                eqsys = backsubst(eqsys);
+                
+                deltax = eqsys(:, size(eqsys, 2));
+                result = result - deltax;
+            end
+            
+            % calculate error of corrected result
+            errorvector = A * result - b;
+            error = norm(errorvector);
+
+            % print corrected result
+            disp('With residual correction:');
+            disp([(1:10)', result, errorvector]);
+            disp(['Error: ', num2str(error)]);
         end
     end
     
