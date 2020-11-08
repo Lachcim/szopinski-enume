@@ -11,5 +11,5 @@ while foundEps / 2 + 1 > 1
     foundEps = foundEps / 2;
 end
 
-disp(['Found epsilon is ', num2str(foundEps)])
-disp(['Epsilon is ', num2str(eps)])
+disp(['Found epsilon is ', num2str(foundEps)]);
+disp(['Epsilon is ', num2str(eps)]);

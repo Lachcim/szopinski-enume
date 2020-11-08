@@ -27,39 +27,39 @@ function [x, errors] = jacobi(A, b)
         x = M * x + w;
         
         % calculate error and stop when it's low enough
-		error = norm(A * x - b);
+        error = norm(A * x - b);
         errors(size(errors) + 1) = error;
         if error < 1e-9; break; end
     end
 end
 
 function [x, errors] = gaussseidel(A, b)
-	% split input matrix and create step zero result vector
+    % split input matrix and create step zero result vector
     [lower, upper, invdiagonal] = splitmatrix(A);
     x = ones(size(A, 1), 1);
-	
-	% execute the algorithm until the desired accuracy is achieved
+    
+    % execute the algorithm until the desired accuracy is achieved
     errors = double.empty(1, 0);
     while 1
-		% calculate step-specific iterative w
-		w = upper * x - b;
-		
-		% calculate next iteration, row by row
-		for row = 1:size(x)
-			% reset value, subtract step-specific w
-			x(row) = -w(row);
-			
-			% subtract elements of the lower matrix multiplied by previous results
-			for col = 1:(row - 1)
-				x(row) = x(row) - lower(row, col) * x(col);
-			end
-			
-			% divide by the diagonal
-			x(row) = x(row) * invdiagonal(row, row);
-		end
-	
+        % calculate step-specific iterative w
+        w = upper * x - b;
+        
+        % calculate next iteration, row by row
+        for row = 1:size(x)
+            % reset value, subtract step-specific w
+            x(row) = -w(row);
+            
+            % subtract elements of the lower matrix multiplied by previous results
+            for col = 1:(row - 1)
+                x(row) = x(row) - lower(row, col) * x(col);
+            end
+            
+            % divide by the diagonal
+            x(row) = x(row) * invdiagonal(row, row);
+        end
+    
         % calculate error and stop when it's low enough
-		error = norm(A * x - b);
+        error = norm(A * x - b);
         errors(size(errors) + 1) = error;
         if error < 1e-9; break; end
     end
