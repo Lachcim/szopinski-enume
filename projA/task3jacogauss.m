@@ -32,6 +32,15 @@ for alg = 1:size(algorithms, 1)
     grid on;
 end
 
+% solve task 2a using the GS algorithm
+taskA = genmatrix('a', 10);
+taskb = genvector('a', 10);
+
+[solution, errors] = gaussseidel(taskA, taskb);
+disp('Solution to task 2b using Gauss-Seidel:');
+disp(solution);
+disp(['Error: ', num2str(errors(size(errors, 2)))]);
+
 % solves LE system using the Jacobi algorithm, returns error per step
 function [x, errors] = jacobi(A, b)
     % split input matrix and create step zero result vector
