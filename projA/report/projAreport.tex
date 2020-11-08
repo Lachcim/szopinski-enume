@@ -1,6 +1,7 @@
 \documentclass{article}
 
 \usepackage{amsmath}
+\usepackage{multicol}
 \setlength{\parskip}{1em}
 
 \begin{document}
@@ -69,5 +70,43 @@
 	
 	An epsilon of $2.2204 \cdot 10^{-16} = 2^{-52}$ is indicative of a standard
 	double-precision IEEE 754 floating point binary representation.
-
+	
+	\newpage
+	
+	\section{Task 2: Solving systems of linear equations using Gaussian
+	elimination}
+	
+	\subsection{Overview}
+	
+	The task consisted of two sub-tasks, each specifying a different system
+	of equations to solve. The systems were to be solved using Gaussian
+	elimination with partial pivoting. The size of the system was sequentially
+	doubled until the computation time became prohibitive. The error of each
+	solution was to be noted.
+	
+	Additionally, for systems whose number of equations was equal to 10,
+	residual correction was to be applied and the solution was to be noted.
+	
+	The systems were given by:
+	
+	\noindent
+	\begin{align*}
+		&A_{ij}^{(a)} =
+		\begin{cases} 
+			4 & \text{for } i = j \\
+			1 & \text{for } i = j \pm 1 \\
+			0 & \text{otherwise}
+		\end{cases}
+		&&
+		b_i^{(a)} = 4 + 0.3i
+		\\
+		&A_{ij}^{(b)} = \frac{6}{7(i + j + 1)}
+		&&
+		b_i^{(b)} =
+		\begin{cases} 
+			\frac{1}{3i} & \text{for even } i\\
+			0 & \text{for odd } i
+		\end{cases}
+	\end{align*}
+	
 \end{document}
