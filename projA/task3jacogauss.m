@@ -10,6 +10,28 @@ taskA = [18,     2,      -3,     1;
          1,      1,      -2,     -10];
 taskb = [7, 12, 24, 20]';
 
+% define available algorithms
+algorithms = {
+    'Jacobi', @jacobi;
+    'Gauss-Seidel', @gaussseidel
+};
+
+% perform task for all available algorithms
+for alg = 1:size(algorithms, 1)
+    [algname, algfunc] = algorithms{alg, :};
+    
+    % find solution and step errors using the given algorithm
+    [solution, errors] = algfunc(taskA, taskb);
+    
+    % plot error data
+    figure;
+    semilogy(1:size(errors, 2), errors, '-o');
+    title(['LE solution error (', algname, ' algorithm)']);
+    xlabel('Step');
+    ylabel('Error');
+    grid on;
+end
+
 % solves LE system using the Jacobi algorithm, returns error per step
 function [x, errors] = jacobi(A, b)
     % split input matrix and create step zero result vector
@@ -28,11 +50,12 @@ function [x, errors] = jacobi(A, b)
         
         % calculate error and stop when it's low enough
         error = norm(A * x - b);
-        errors(size(errors) + 1) = error;
-        if error < 1e-9; break; end
+        errors(size(errors, 2) + 1) = error;
+        if error < 1e-10; break; end
     end
 end
 
+% solves LE system using the Gauss-Seidel algorithm
 function [x, errors] = gaussseidel(A, b)
     % split input matrix and create step zero result vector
     [lower, upper, invdiagonal] = splitmatrix(A);
@@ -60,8 +83,8 @@ function [x, errors] = gaussseidel(A, b)
     
         % calculate error and stop when it's low enough
         error = norm(A * x - b);
-        errors(size(errors) + 1) = error;
-        if error < 1e-9; break; end
+        errors(size(errors, 2) + 1) = error;
+        if error < 1e-10; break; end
     end
 end
 
