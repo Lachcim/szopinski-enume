@@ -1,4 +1,4 @@
-% ENUME MICHAL SZOPINSKI
+% ENUME MICHAŁ SZOPIŃSKI
 % PROJECT A NUMBER 62
 % TASK 2
 % https://github.com/Lachcim/szopinski-enume
