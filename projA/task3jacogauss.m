@@ -4,36 +4,36 @@
 % https://github.com/Lachcim/szopinski-enume
 
 % define matrix A and vector b as specified in the task
-taskA =	[	18,		2,		-3,		1;
-			2,		-25,	5,		-18;
-			1,		3,		13,		-8;
-			1,		1,		-2,		-10;	];
+taskA = [18,     2,      -3,     1;
+         2,      -25,    5,      -18;
+         1,      3,      13,     -8;
+         1,      1,      -2,     -10];
 taskb = [7, 12, 24, 20]';
 
 % solves LE system using the Jacobi algorithm, returns error per step
 function [x, errors] = jacobi(A, b)
-	% split input matrix and create step zero result vector
-	[lower, upper, invdiagonal] = splitmatrix(A);
-	x = ones(size(A, 1), 1);
-	
-	% get Jacobi-specific iterative M and w
-	M = -invdiagonal * (lower + upper);
-	w = invdiagonal * b;
-	
-	% execute the algorithm until the desired accuracy is achieved
-	errors = double.empty(1, 0);
-	while 1
-		% calculate next iteration
-		x = M * x + w;
-		
-		% calculate error
-		errorvector = A * x - b;
+    % split input matrix and create step zero result vector
+    [lower, upper, invdiagonal] = splitmatrix(A);
+    x = ones(size(A, 1), 1);
+    
+    % get Jacobi-specific iterative M and w
+    M = -invdiagonal * (lower + upper);
+    w = invdiagonal * b;
+    
+    % execute the algorithm until the desired accuracy is achieved
+    errors = double.empty(1, 0);
+    while 1
+        % calculate next iteration
+        x = M * x + w;
+        
+        % calculate error
+        errorvector = A * x - b;
         error = norm(errorvector);
-		errors(size(errors) + 1) = error;
-		
+        errors(size(errors) + 1) = error;
+        
         % stop iteration when the error drops below the threshold
-		if error < 1e-9; break; end
-	end
+        if error < 1e-9; break; end
+    end
 end
 
 % splits a matrix a into lower, upper and inverse diagonal matrices
