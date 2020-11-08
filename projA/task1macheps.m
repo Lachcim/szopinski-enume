@@ -7,7 +7,7 @@
 foundEps = 1;
 
 % decrement exponent until floating point underflow occurs
-while (foundEps / 2 + 1 > 1)
+while foundEps / 2 + 1 > 1
     foundEps = foundEps / 2;
 end
 

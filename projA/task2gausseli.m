@@ -13,7 +13,7 @@ for task = 'ab'
     
     % perform calculation for increasing number of equations
     for equationspow = 0:maxeqcount
-        equationcount = 10 * 2^equationspow;
+        equationcount = 10 * 2 ^ equationspow;
         
         % generate coefficient matrix A and vector b
         A = genmatrix(task, equationcount);
