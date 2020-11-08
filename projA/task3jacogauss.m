@@ -26,12 +26,9 @@ function [x, errors] = jacobi(A, b)
         % calculate next iteration
         x = M * x + w;
         
-        % calculate error
-        errorvector = A * x - b;
-        error = norm(errorvector);
+        % calculate error and stop when it's low enough
+		error = norm(A * x - b);
         errors(size(errors) + 1) = error;
-        
-        % stop iteration when the error drops below the threshold
         if error < 1e-9; break; end
     end
 end
@@ -61,12 +58,9 @@ function [x, errors] = gaussseidel(A, b)
 			x(row) = x(row) * invdiagonal(row, row);
 		end
 	
-        % calculate error
-        errorvector = A * x - b;
-        error = norm(errorvector);
+        % calculate error and stop when it's low enough
+		error = norm(A * x - b);
         errors(size(errors) + 1) = error;
-        
-        % stop iteration when the error drops below the threshold
         if error < 1e-9; break; end
     end
 end
