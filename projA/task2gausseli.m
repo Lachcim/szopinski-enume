@@ -65,6 +65,9 @@ for task = 'ab'
     xlabel('Equation count');
     ylabel('Error');
     grid on;
+    set(gcf, 'PaperPosition', [0 0 6 4]);
+    set(gcf, 'PaperSize', [6 4]);
+    print(['report/', task, 'error'], '-dpdf')
 end
 
 % performs Gaussian elimination
