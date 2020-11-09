@@ -1,7 +1,6 @@
 \documentclass{article}
 
 \usepackage{amsmath}
-\usepackage{multicol}
 \setlength{\parskip}{1em}
 
 \begin{document}
@@ -108,5 +107,63 @@
 			0 & \text{for odd } i
 		\end{cases}
 	\end{align*}
+	
+	\subsection{Implementation}
+	
+	The primary medium upon which the Gaussian elimination is performed is an
+	$n$ by $(n + 1)$ matrix (where $n$ is the number of equations), which
+	simultaneously describes the coefficient matrix $A$ and the constant vector
+	$b$. This matrix is aptly named \texttt{eqsys} in the code.
+	
+	In essence, the Gaussian elimination method for solving a system of linear
+	equations consists of two steps:
+	
+	\begin{enumerate}
+		\item \textbf{Gaussian elimination proper}, which transforms the
+		matrix $A$ into a triangular matrix; and
+		\item \textbf{Back-substitution}, which transforms the triangular
+		matrix into an identity matrix and finds the vector $x$.
+	\end{enumerate}
+	
+	Each of these steps is performed in a separate function.
+	
+	\subsubsection{Gaussian elimination}
+	
+	The program travels along the diagonal of \texttt{eqsys} and for each cell
+	it encounters, it eliminates (reduces to $0$) the coefficients directly
+	below it. It does so by multiplying the current row by a constant and
+	subtracting it from the rows beneath. This constant, called
+	\texttt{reductor} in the code, is given as the ratio of the cell to be
+	reduced and the current diagonal cell.
+	
+	To combat inaccuracy resulting from subsequent division, multiplication and
+	subtraction, the reduced cell is explicitly set to $0$ afterwards.
+	
+	\subsubsection{Partial pivoting}
+	
+	Gaussian elimination alone is prone to errors when a value on the diagonal
+	is equal to $0$ and the reductor cannot be constructed. For this reason,
+	partial pivoting is added.
+	
+	For each cell on the diagonal, the program looks at the cells beneath it and
+	finds the one with the greatest absolute value. If it exceeds the absolute
+	value of the current cell, the corresponding two rows are swapped. This
+	ensures that the divisor making up the reductor is as far from zero as
+	possible.
+	
+	\subsubsection{Back-substitution}
+	
+	Back-substitution is analogous to Gaussian elimination, except it travels
+	leftwards along the diagonal end eliminates the cells above it. In addition,
+	it performs ``normalization" of the diagonal, scaling each row so that the
+	diagonal cell is equal to $1$.
+	
+	\subsubsection{Residual correction}
+	
+	Residual correction is a method of improving the accuracy of the results.
+	The system is solved once again, this time with $b$ replaced with the vector
+	of errors of the solution. The resulting vector $\delta x$ is then
+	subtracted from the original solution. This procedure can be repeated as
+	needed.
 	
 \end{document}
