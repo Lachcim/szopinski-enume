@@ -81,7 +81,7 @@
 	
 	\subsection{Overview}
 	
-	The task consisted of two sub-tasks, each specifying a different system
+	The task consisted of two subtasks, each specifying a different system
 	of equations to solve. The systems were to be solved using Gaussian
 	elimination with partial pivoting. The size of the system was sequentially
 	doubled until the computation time became prohibitive. The error of each
@@ -247,5 +247,23 @@
 			Error: 0.00020161
 		\end{verbatim}
 	\end{multicols}
+	
+	\subsection{Observations}
+	
+	Matrices from both subtasks a and b lent themselves nicely to being solved
+	using the Gaussian elimination. Their absolute errors, when divided by the
+	solutions themselves, resulted in very small relative errors, nearing the
+	machine epsilon.
+	
+	The computation time became prohibitive beyond $n = 320$, showing that
+	Gaussian elimination is an effective method of solving large systems
+	of equations.
+	
+	Residual correction was very effective for the matrix from subtask a,
+	reducing the error to a perfect $0$. For subtask b, on the other hand, no
+	matter the amount of iterations, the error could not be reduced any further.
+	This might be related to a high condition number of the matrix,
+	$2.4225 \cdot 10^{14}$, prohibiting it from producing accurate enough
+	results.
 	
 \end{document}
