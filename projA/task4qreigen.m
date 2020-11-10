@@ -3,13 +3,39 @@
 % TASK 4
 % https://github.com/Lachcim/szopinski-enume
 
-A = [ 1,  1, 9;
-      2, -1, 0;
-     -2,  4, 0];
-[Q, R] = qrdecomp(A);
-disp(Q);
-disp(R);
-disp(Q * R);
+A = [1, 1, 7, 5, 2;
+     1, 8, 5, 4, 4;
+     7, 5, 0, 8, 8;
+     5, 4, 8, 0, 8;
+     2, 4, 8, 8, 1];
+
+[eigenvalues, errors] = eigennoshifts(A);
+disp(eigenvalues);
+disp(errors);
+
+function [eigenvalues, errors] = eigennoshifts(A)
+    % initialize empty error array
+    errors = double.empty(1, 0);
+    
+    while 1
+        % converge to eigenvalue matrix using the QR method
+        [Q, R] = qrdecomp(A);
+        A = R * Q;
+        
+        % iterate until all non-diagonal elements are below the threshold
+        nondiag = A - diag(diag(A));
+        maxnonzero = max(max(nondiag));
+        
+        % log error
+        errors(size(errors, 2) + 1) = maxnonzero;
+        
+        % stop iteration
+        if (maxnonzero <= 1e-6); break; end
+    end
+    
+    % convert eigenvalue matrix to vector
+    eigenvalues = diag(A);
+end
 
 % performs QR decomposition of a matrix
 function [Q, R] = qrdecomp(A)
