@@ -91,8 +91,6 @@
 	residual correction was to be applied and the solution was to be noted.
 	
 	The systems were given by:
-	
-	\noindent
 	\begin{align*}
 		&A_{ij}^{(a)} =
 		\begin{cases} 
@@ -248,6 +246,7 @@
 		\end{verbatim}
 	\end{multicols}
 	
+	\newpage
 	\subsection{Observations}
 	
 	Matrices from both subtasks a and b lent themselves nicely to being solved
@@ -265,5 +264,89 @@
 	This might be related to a high condition number of the matrix,
 	$2.4225 \cdot 10^{14}$, prohibiting it from producing accurate enough
 	results.
+	
+	\newpage
+	\section{Task 3: Solving systems of linear equations using the Jacobi and
+	Gauss-Seidel algorithms}
+	
+	\subsection{Overview}
+	
+	In this task, a predefined, fixed-size system of equations was to be solved
+	using the Jacobi and Gauss-Seidel iterative algorithms. The algorithms were
+	to be iterated until the accuracy $\lVert Ax_k - b \rVert < 10^{-10}$ was
+	achieved. The error of each iteration was to be noted.
+	
+	The system to be solved:
+	\begin{align*}
+		18x_1 + 2x_2 - 3x_3 + x_4 & = 7\\
+		2x_1 - 25x_2 + 5x_3 - 18x^4 & = 12\\
+		x_1 + 3x_2 + 13x_3 - 8x_4 & = 24\\
+		x_1 + x_2 - 2x_3 - 10x_4 & = 20
+	\end{align*}
+	
+	Afterwards, one of the algorithms was to be applied to matrices from task 2
+	a and b, for $n = 10$.
+	
+	\subsection{Implementation}
+	
+	The general formula describing iterative methods of solving linear equation
+	systems is:
+	\begin{equation}\label{eq:1}
+		x^{(i + 1)} = Mx^{(i)} + w
+	\end{equation}
+	Where the matrix $M$ and the vector $w$ are specific to the chosen
+	algorithm.
+	
+	\subsubsection{The Jacobi algorithm}
+	
+	The first step of the Jacobi algorithm is to split the matrix $A$ into three
+	matrices: the lower triangular matrix, the upper triangular matrix and the
+	diagonal matrix.
+	
+	Because the diagonal matrix is only ever used in its inverse from, the
+	function doing the splitting only returns the inverse diagonal matrix. It
+	utilizes the fact that the inverse of a diagonal matrix is a matrix of the
+	inverse of its diagonal elements.
+	
+	Once the matrices $L$, $U$ and $D^{-1}$ have been obtained, the parameters
+	$M$ and $w$ are given by:
+	\begin{align*}
+		M &= -D^{-1}(L + U)\\
+		w &= D^{-1}b
+	\end{align*}
+	
+	The step described in \eqref{eq:1} is then performed until the desired
+	accuracy is achieved.
+	
+	\subsubsection{The Gauss-Seidel algorithm}
+	
+	The Gauss-Seidel algorithm is similar to the Jacobi algorithm in that it
+	utilizes the lower, upper and inverse diagonal matrices to calculate
+	subsequent iterations. An important difference is that $M$ and $w$ are not
+	constant and they cannot be trivially calculated.
+	
+	An iteration of the Gauss-Seidel algorithm can be written as:
+	\begin{align*}
+		Dx^{(i + 1)} &= -Lx^{(i + 1)} - (Ux^{(i)} - b)\\
+		&= -Lx^{(i + 1)} - w^{(i)}
+	\end{align*}
+	
+	The presence of $x^{(i + 1)}$ on both sides of the equation might appear
+	problematic, however, it's crucial to observe that individual elements of
+	the vector $x_n^{(i + 1)}$ can be calculated based solely on the knowledge
+	of their preceding elements, with $x_1^{(i + 1)}$ being completely
+	independent:
+	\begin{align*}
+		x_1^{(i + 1)} &= (-w_1^{(i)}) \cdot D^{-1}_{11}\\
+		x_2^{(i + 1)} &= (-L_{21} \cdot x_1^{(i + 1)} - w_2^{(i)})
+		\cdot D^{-1}_{22}\\
+		x_3^{(i + 1)} &= (-L_{31} \cdot x_1^{(i + 1)}
+		- L_{32} \cdot x_2^{(i + 1)}
+		- w_3^{(i)}) \cdot D^{-1}_{33}\\
+		&\ldots
+	\end{align*}
+	
+	And so, on each step, the vector $w^{(i)}$ is calculated first, after which
+	the elements of $x_n^{(i + 1)}$ are computed in sequence.
 	
 \end{document}
