@@ -11,6 +11,10 @@ A = [1, 1, 7, 5, 2;
 
 [eigenvalues, errors] = eigennoshifts(A);
 disp(eigenvalues);
+disp(size(errors, 2));
+[eigenvalues, errors] = eigenshifts(A);
+disp(eigenvalues);
+disp(size(errors, 2));
 
 % finds the eigenvalues of a matrix using the QR method without shifts
 function [eigenvalues, errors] = eigennoshifts(A)
@@ -25,24 +29,61 @@ function [eigenvalues, errors] = eigennoshifts(A)
         % iterate until all non-diagonal elements are below the threshold
         nondiag = A - diag(diag(A));
         maxnonzero = max(max(nondiag));
-        
-        % log error
         errors(size(errors, 2) + 1) = maxnonzero;
-        
-        % stop iteration
         if (maxnonzero <= 1e-6); break; end
     end
     
     % convert eigenvalue matrix to vector
-    eigenvalues = diag(A);
+    eigenvalues = diag(A)';
+end
+
+% finds the eigenvalues of a matrix using QR with shifts
+function [eigenvalues, errors] = eigenshifts(A)
+    % initialize empty output
+    eigenvalues = double.empty(1, 0);
+    errors = double.empty(1, 0);
+    
+    % consider increasingly smaller sub-matrices
+    matsize = size(A, 1);
+    while matsize >= 2
+        % find one eigenvalue
+        while 1
+            % find eigenvalue of the lower right corner
+            corner = A((matsize - 1):matsize, (matsize - 1):matsize);
+            cornereigen = eigenoftwo(corner);
+            
+            % shift and iterate algorithm
+            A = A - eye(matsize) * cornereigen;
+            [Q, R] = qrdecomp(A);
+            A = R * Q + eye(matsize) * cornereigen;
+            
+            % move on once the row has been zeroed out
+            maxnonzero = max(A(matsize, 1:(matsize - 1)));
+            errors(size(errors, 2) + 1) = maxnonzero;
+            
+            if (maxnonzero <= 1e-6)
+                % remember discovered eigenvalue
+                eigenvalues(size(eigenvalues, 2) + 1) = A(matsize, matsize);
+                break;
+            end
+        end
+        
+        % deflate matrix
+        matsize = matsize - 1;
+        A = A(1:matsize, 1:matsize);
+    end
+    
+    % include final eigenvalue
+    eigenvalues(size(eigenvalues, 2) + 1) = A(1, 1);
 end
 
 % finds the eigenvalue of a 2x2 matrix that is closer to the lower right corner
 function eigen = eigenoftwo(A)
     % solve characteristic equation of matrix to find its eigenvalues
     delta = (A(1) + A(4)) ^ 2 - 4 * (A(1) * A(4) - A(2) * A(3));
-    eigen1 = ((A(1) + A(4)) - sqrt(delta)) / 2;
-    eigen2 = ((A(1) + A(4)) + sqrt(delta)) / 2;
+    sqrtdelta = sqrt(delta);
+    eigen1 = ((A(1) + A(4)) - sqrtdelta) / 2;
+    eigen2 = ((A(1) + A(4)) + sqrtdelta) / 2;
     
     % return value closer to lower right corner
     if abs(A(4) - eigen1) < abs(A(4) - eigen2)
