@@ -400,4 +400,19 @@
 
 		Error: 3.01e-11
 	\end{verbatim}
+	
+	\subsubsection{Observations}
+	
+	In both algorithms, the error of the solution decreased exponentially in
+	relation to the number of iterations.
+	
+	The Gauss-Seidel method proved to be faster than the Jacobi method, with the
+	desired accuracy achieved in just 32 iterations compared to 43.
+	
+	The matrix from task 2a was solved correctly. The 2b variant, however, could
+	not achieve the desired accuracy and the algorithm became stuck in a
+	loop, iterating infinitely in an attempt to reduce the error. This again
+	may be related to the high condition number of the matrix, or to the fact
+	that the measured error is absolute rather than relative.
+	
 \end{document}
