@@ -17,26 +17,30 @@ function [Q, R] = qrdecomp(A)
     Q = zeros(size(A));
     R = eye(size(A, 2));
     
-    % calculate Q and R using the Gram-Schmidt algorithm
+    % modified Gram-Schmidt, use each column to orthogonalize the ones in front of it
     for col = 1:size(A, 2)
-        % initialize column as its unorthogonalized counterpart
+        % by the time we've reached this column, it's already been orthogonalized
         Q(:, col) = A(:, col);
         
-        % iterate over previous columns to obtain the orthogonalized column
-        for prev = 1:(col - 1)
-            % calculate the R cell for this column pair
-            R(prev, col) = dot(Q(:, prev), A(:, col)) / dot(Q(:, prev), Q(:, prev));
+        % calculate current column dot product for R
+        coldot = dot(Q(:, col), Q(:, col));
+        
+        % orthogonalize further columns
+        for next = (col + 1):size(A, 2)
+            % calculate R cell for this column pair
+            R(col, next) = dot(Q(:, col), A(:, next)) / coldot;
             
-            % from the current column, subtract the previous column times the R cell
-            Q(:, col) = Q(:, col) - R(prev, col) * Q(:, prev);
+            % orthogonalize column
+            A(:, next) = A(:, next) - R(col, next) * Q(:, col);
         end
     end
     
     % normalize matrix
-    normalizer = eye(size(Q));
+    normalizer = zeros(size(Q));
     for col = 1:size(Q, 2)
-        normalizer(col, col) = norm(Q(:, col));
-        Q(:, col) = Q(:, col) / norm(Q(:, col));
+        colnorm = norm(Q(:, col));
+        normalizer(col, col) = colnorm;
+        Q(:, col) = Q(:, col) / colnorm;
     end
     R = normalizer * R;
 end
