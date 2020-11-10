@@ -33,6 +33,9 @@ for alg = 1:size(algorithms, 1)
     xlabel('Step');
     ylabel('Error');
     grid on;
+    set(gcf, 'PaperPosition', [0 0 6 4]);
+    set(gcf, 'PaperSize', [6 4]);
+    print(['report/', func2str(algfunc), 'error'], '-dpdf')
 end
 
 % solve task 2a using the GS algorithm
@@ -40,7 +43,7 @@ taskA = genmatrix('a', 10);
 taskb = genvector('a', 10);
 
 [solution, errors] = gaussseidel(taskA, taskb);
-disp('Solution to task 2b using Gauss-Seidel:');
+disp('Solution to task 2a using Gauss-Seidel:');
 disp(solution);
 disp(['Error: ', num2str(errors(size(errors, 2)))]);
 

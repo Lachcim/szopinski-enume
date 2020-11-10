@@ -349,4 +349,55 @@
 	And so, on each step, the vector $w^{(i)}$ is calculated first, after which
 	the elements of $x_n^{(i + 1)}$ are computed in sequence.
 	
+	\subsection{Program output}
+	
+	\subsubsection{Error plots}
+	
+	\includegraphics[width=\textwidth]{jacobierror}
+	\includegraphics[width=\textwidth]{gaussseidelerror}
+	
+	\subsubsection{Solutions}
+	
+	\begin{multicols}{2}
+		\begin{verbatim}
+			Solution using Jacobi:
+
+			i          x_i
+			1      0.44705
+			2       1.0232
+			3      0.38763
+			4      -1.9305
+
+			Error: 6.1548e-11
+		\end{verbatim}
+		\begin{verbatim}
+			Solution using Gauss-Seidel:
+
+			i          x_i
+			1      0.44705
+			2       1.0232
+			3      0.38763
+			4      -1.9305
+
+			Error: 4.6134e-11
+		\end{verbatim}
+	\end{multicols}
+	
+	\begin{verbatim}
+		Solution to task 2a using Gauss-Seidel:
+		
+		 i          x_i
+		 1       0.8953
+		 2      0.71881
+		 3      0.82946
+		 4      0.86335
+		 5      0.91714
+		 6       0.9681
+		 7       1.0105
+		 8       1.0901
+		 9       1.0293
+		10       1.4927
+
+		Error: 3.01e-11
+	\end{verbatim}
 \end{document}
