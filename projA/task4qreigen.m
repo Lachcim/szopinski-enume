@@ -9,13 +9,15 @@ A = [ 1,  1, 9;
 [Q, R] = qrdecomp(A);
 disp(Q);
 disp(R);
+disp(Q * R);
 
+% performs QR decomposition of a matrix
 function [Q, R] = qrdecomp(A)
     % initialize empty matrices
     Q = zeros(size(A));
     R = eye(size(A, 2));
     
-    % calculate Q and R using Gram-Schmidt algorithm
+    % calculate Q and R using the Gram-Schmidt algorithm
     for col = 1:size(A, 2)
         % initialize column as its unorthogonalized counterpart
         Q(:, col) = A(:, col);
@@ -29,4 +31,12 @@ function [Q, R] = qrdecomp(A)
             Q(:, col) = Q(:, col) - R(prev, col) * Q(:, prev);
         end
     end
+    
+    % normalize matrix
+    normalizer = eye(size(Q));
+    for col = 1:size(Q, 2)
+        normalizer(col, col) = norm(Q(:, col));
+        Q(:, col) = Q(:, col) / norm(Q(:, col));
+    end
+    R = normalizer * R;
 end
