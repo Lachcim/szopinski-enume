@@ -11,14 +11,14 @@ A = [1, 1, 7, 5, 2;
 
 [eigenvalues, errors] = eigennoshifts(A);
 disp(eigenvalues);
-disp(errors);
 
+% finds the eigenvalues of a matrix using the QR method without shifts
 function [eigenvalues, errors] = eigennoshifts(A)
     % initialize empty error array
     errors = double.empty(1, 0);
     
     while 1
-        % converge to eigenvalue matrix using the QR method
+        % converge to eigenvalue diagonal matrix
         [Q, R] = qrdecomp(A);
         A = R * Q;
         
@@ -35,6 +35,21 @@ function [eigenvalues, errors] = eigennoshifts(A)
     
     % convert eigenvalue matrix to vector
     eigenvalues = diag(A);
+end
+
+% finds the eigenvalue of a 2x2 matrix that is closer to the lower right corner
+function eigen = eigenoftwo(A)
+    % solve characteristic equation of matrix to find its eigenvalues
+    delta = (A(1) + A(4)) ^ 2 - 4 * (A(1) * A(4) - A(2) * A(3));
+    eigen1 = ((A(1) + A(4)) - sqrt(delta)) / 2;
+    eigen2 = ((A(1) + A(4)) + sqrt(delta)) / 2;
+    
+    % return value closer to lower right corner
+    if abs(A(4) - eigen1) < abs(A(4) - eigen2)
+        eigen = eigen1;
+    else
+        eigen = eigen2;
+    end
 end
 
 % performs QR decomposition of a matrix
