@@ -41,7 +41,7 @@ function [eigenvalues, iterations, A] = eigennoshifts(A)
         
         % iterate until all non-diagonal elements are below the threshold
         nondiag = A - diag(diag(A));
-        maxnonzero = max(max(nondiag));
+        maxnonzero = max(max(abs(nondiag)));
         if (maxnonzero <= 1e-6); break; end
     end
     
@@ -71,7 +71,7 @@ function [eigenvalues, iterations, finalMatrix] = eigenshifts(A)
             iterations = iterations + 1;
             
             % move on once the row has been zeroed out
-            maxnonzero = max(A(matsize, 1:(matsize - 1)));  
+            maxnonzero = max(abs(A(matsize, 1:(matsize - 1))));
             if (maxnonzero <= 1e-6)
                 % remember discovered eigenvalue
                 eigenvalues(size(eigenvalues, 2) + 1) = A(matsize, matsize);
