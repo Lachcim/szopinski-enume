@@ -443,4 +443,49 @@
 		\end{bmatrix}
 	\end{equation*}
 	
+	\subsection{Implementation}
+	
+	The QR method is based on the observation that by repeatedly decomposing the
+	matrix into its orthogonal matrix $Q$ and triangular matrix $R$ and
+	recomposing it as $R * Q$, the matrix will converge into a diagonal matrix
+	of its eigenvalues by means of similarity.
+	
+	\subsubsection{QR decomposition using the Gram-Schmidt algorithm}
+	
+	The columns of the input matrix $A$ are orthogonalized with the modified
+	Gram-Schmidt algorithm, producing matrices $Q$ and $R$, which can later be
+	multiplied together to reverse the process.
+	
+	The algorithm iterates over the columns of A and orthogonalizes every column
+	in front of it with relation to the currently visited column. This is done
+	by calculating the dot product of the two columns and using it to subtract
+	the ``common part" from the second column. The matrix $Q$ is produced in the
+	process, as well as $R$ as a byproduct.
+	
+	\subsubsection{QR method without shifts}
+	
+	The QR method for finding the eigenvalues of a matrix without shifts is a
+	naive implementation of the observation described at the beginning of this
+	section. The matrix is repeatedly decomposed and recomposed until its
+	off-diagonal elements converge below the prescribed threshold.
+	
+	\subsubsection{QR method with shifts}
+	
+	The QR method may be accelerated by shifting the diagonal of the matrix
+	towards an approximation of the expected eigenvalues. The required shift can
+	be calculated by finding the eigenvalues of the lower right $2 \times 2$
+	sub-matrix and choosing the one closer to the lower right corner of said
+	sub-matrix.
+	
+	The eigenvalues of the sub-matrix can be found by solving the characteristic
+	equation of the sub-matrix, $\det{(A - \lambda I)} = 0$. This will result in
+	a quadratic equation whose solutions are guaranteed to be real for a
+	symmetric matrix.
+	
+	This shift is applied on every iteration of the algorithm. Once all
+	non-diagonal values of the lowermost row of the matrix have decreased below
+	the threshold, the matrix is deflated, i.e. its size is reduced by one in
+	both dimensions. The algorithm stops once the matrix can't be deflated any
+	further.
+	
 \end{document}
