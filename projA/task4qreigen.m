@@ -3,6 +3,7 @@
 % TASK 4
 % https://github.com/Lachcim/szopinski-enume
 
+% define matrix of choice
 A = [1, 1, 7, 5, 2;
      1, 8, 5, 4, 4;
      7, 5, 0, 8, 8;

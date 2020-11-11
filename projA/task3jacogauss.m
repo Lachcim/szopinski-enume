@@ -4,10 +4,10 @@
 % https://github.com/Lachcim/szopinski-enume
 
 % define matrix A and vector b as specified in the task
-taskA = [18,     2,      -3,     1;
-         2,      -25,    5,      -18;
-         1,      3,      13,     -8;
-         1,      1,      -2,     -10];
+taskA = [18,   2, -3,   1;
+          2, -25,  5, -18;
+          1,   3, 13,  -8;
+          1,   1, -2, -10];
 taskb = [7, 12, 24, 20]';
 
 % define available algorithms
