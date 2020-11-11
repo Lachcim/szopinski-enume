@@ -21,9 +21,8 @@ for task = 'ab'
         eqsys = [A, b];
         
         % perform gaussian elimination and back-substitution
-        eqsys = gausseli(eqsys);
-        eqsys = backsubst(eqsys);
-        result = eqsys(:, size(eqsys, 2));
+        [eqsys, lower, upper] = gausseli(eqsys);
+        result = backsubst(eqsys);
         
         % note the error
         errorvector = A * result - b;
@@ -39,22 +38,19 @@ for task = 'ab'
             
             % residual correction: calculate deltax and correct result
             for i = 1:10
-                eqsys = [A, A * result - b];
-                eqsys = gausseli(eqsys);
-                eqsys = backsubst(eqsys);
+                % solve system using LU decomposition
+                intermediate = backsubstflip([lower, errorvector]);
+                deltax = backsubst([upper, intermediate]);
                 
-                deltax = eqsys(:, size(eqsys, 2));
+                % apply correction to result
                 result = result - deltax;
+                errorvector = A * result - b;
             end
             
-            % calculate error of corrected result
-            errorvector = A * result - b;
-            error = norm(errorvector);
-
             % print corrected result
             disp('With residual correction:');
             disp([(1:10)', result, errorvector]);
-            disp(['Error: ', num2str(error)]);
+            disp(['Error: ', num2str(norm(errorvector))]);
         end
     end
     
@@ -70,8 +66,11 @@ for task = 'ab'
     print(['report/', task, 'error'], '-dpdf')
 end
 
-% performs Gaussian elimination
-function eqsys = gausseli(eqsys)
+% performs Gaussian elimination and LU decomposition
+function [eqsys, lower, upper] = gausseli(eqsys)
+    % initialize lower triangular matrix
+    lower = eye(size(eqsys, 1));
+    
     % for every column, eliminate (size - column) coefficients
     for col = 1:size(eqsys, 1)
         % partial pivoting - find best row
@@ -93,14 +92,20 @@ function eqsys = gausseli(eqsys)
             reductor = eqsys(row, col) / eqsys(col, col);
             eqsys(row, :) = eqsys(row, :) - eqsys(col, :) * reductor;
             
+            % add reductor to lower matrix
+            lower(row, col) = reductor;
+            
             % simulate perfect reduction
             eqsys(row, col) = 0;
         end
     end
+    
+    % extract upper triangular matrix from system
+    upper = eqsys(:, 1:size(eqsys, 2) - 1);
 end
 
-% reduces triangular matrix to diagonal matrix
-function eqsys = backsubst(eqsys)
+% solves system with triangular matrix
+function result = backsubst(eqsys)
     for col = size(eqsys, 1):-1:1
         % normalize diagonal coefficients to 1
         eqsys(col, :) = eqsys(col, :) / eqsys(col, col);
@@ -111,4 +116,18 @@ function eqsys = backsubst(eqsys)
             eqsys(row, :) = eqsys(row, :) - eqsys(col, :) * reductor;
         end
     end
+    
+    % rightmost column is now the result
+    result = eqsys(:, size(eqsys, 2));
+end
+
+% performs back-substitution for lower triangular matrices
+function result = backsubstflip(eqsys)
+    % flip the equation system for lower triangular matrices
+    eqcount = size(eqsys, 1);
+    eqsys(:, 1:eqcount) = rot90(eqsys(:, 1:eqcount), 2);
+    eqsys(:, eqcount + 1) = flipud(eqsys(:, eqcount + 1));
+    
+    % perform back-substitution and flip the result
+    result = flipud(backsubst(eqsys));
 end
