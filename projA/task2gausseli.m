@@ -21,7 +21,7 @@ for task = 'ab'
         eqsys = [A, b];
         
         % perform gaussian elimination and back-substitution
-        [eqsys, lower, upper] = gausseli(eqsys);
+        [eqsys, lower, upper, permut] = gausseli(eqsys);
         result = backsubst(eqsys);
         
         % note the error
@@ -39,7 +39,7 @@ for task = 'ab'
             % residual correction: calculate deltax and correct result
             for i = 1:10
                 % solve system using LU decomposition
-                intermediate = backsubstflip([lower, errorvector]);
+                intermediate = backsubstflip([lower, permut * errorvector]);
                 deltax = backsubst([upper, intermediate]);
                 
                 % apply correction to result
@@ -67,9 +67,10 @@ for task = 'ab'
 end
 
 % performs Gaussian elimination and LU decomposition
-function [eqsys, lower, upper] = gausseli(eqsys)
-    % initialize lower triangular matrix
-    lower = eye(size(eqsys, 1));
+function [eqsys, lower, upper, permut] = gausseli(eqsys)
+    % initialize lower triangular and permutation matrix
+    lower = zeros(size(eqsys, 1));
+    permut = eye(size(eqsys, 1));
     
     % for every column, eliminate (size - column) coefficients
     for col = 1:size(eqsys, 1)
@@ -86,6 +87,7 @@ function [eqsys, lower, upper] = gausseli(eqsys)
         
         % swap first row and best row
         eqsys([col, bestrow], :) = eqsys([bestrow, col], :);
+        permut([col, bestrow], :) = permut([bestrow, col], :);
         
         for row = (col + 1):size(eqsys, 1)
             % calculate reductor constant and perform reduction
@@ -98,9 +100,16 @@ function [eqsys, lower, upper] = gausseli(eqsys)
             % simulate perfect reduction
             eqsys(row, col) = 0;
         end
+        
+        % permute the lower matrix
+        lower([col, bestrow], :) = lower([bestrow, col], :);
+        lowertmp = lower(col, col);
+        lower(col, col) = lower(bestrow, col);
+        lower(bestrow, col) = lowertmp;
     end
     
-    % extract upper triangular matrix from system
+    % return lower and upper triangular matrices
+    lower = lower + eye(size(lower));
     upper = eqsys(:, 1:size(eqsys, 2) - 1);
 end
 
