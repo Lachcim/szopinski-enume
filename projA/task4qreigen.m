@@ -9,27 +9,39 @@ A = [1, 1, 7, 5, 2;
      5, 4, 8, 0, 8;
      2, 4, 8, 8, 1];
 
-[eigenvalues, errors] = eigennoshifts(A);
-disp(eigenvalues);
-disp(size(errors, 2));
-[eigenvalues, errors] = eigenshifts(A);
-disp(eigenvalues);
-disp(size(errors, 2));
+% define available algorithms
+algorithms = {
+    'without shifts', @eigennoshifts;
+    'with shifts', @eigenshifts
+};
+
+% solve problem using both algorithms
+for alg = 1:size(algorithms, 1)
+    [algname, algfunc] = algorithms{alg, :};
+    
+    % find solution and iteration count using the given algorithm
+    [solution, iterations, finalMatrix] = algfunc(A);
+    disp(['Solution using QR ', algname, ':']);
+    disp(solution);
+    disp('Final matrix:');
+    disp(finalMatrix);
+    disp(['Iteration count: ', num2str(iterations)]);
+end
 
 % finds the eigenvalues of a matrix using the QR method without shifts
-function [eigenvalues, errors] = eigennoshifts(A)
-    % initialize empty error array
-    errors = double.empty(1, 0);
+function [eigenvalues, iterations, A] = eigennoshifts(A)
+    % initialize iteration counter
+    iterations = 0;
     
     while 1
         % converge to eigenvalue diagonal matrix
         [Q, R] = qrdecomp(A);
         A = R * Q;
+        iterations = iterations + 1;
         
         % iterate until all non-diagonal elements are below the threshold
         nondiag = A - diag(diag(A));
         maxnonzero = max(max(nondiag));
-        errors(size(errors, 2) + 1) = maxnonzero;
         if (maxnonzero <= 1e-6); break; end
     end
     
@@ -38,10 +50,10 @@ function [eigenvalues, errors] = eigennoshifts(A)
 end
 
 % finds the eigenvalues of a matrix using QR with shifts
-function [eigenvalues, errors] = eigenshifts(A)
+function [eigenvalues, iterations, finalMatrix] = eigenshifts(A)
     % initialize empty output
     eigenvalues = double.empty(1, 0);
-    errors = double.empty(1, 0);
+    iterations = 0;
     
     % consider increasingly smaller sub-matrices
     matsize = size(A, 1);
@@ -56,11 +68,10 @@ function [eigenvalues, errors] = eigenshifts(A)
             A = A - eye(matsize) * cornereigen;
             [Q, R] = qrdecomp(A);
             A = R * Q + eye(matsize) * cornereigen;
+            iterations = iterations + 1;
             
             % move on once the row has been zeroed out
-            maxnonzero = max(A(matsize, 1:(matsize - 1)));
-            errors(size(errors, 2) + 1) = maxnonzero;
-            
+            maxnonzero = max(A(matsize, 1:(matsize - 1)));  
             if (maxnonzero <= 1e-6)
                 % remember discovered eigenvalue
                 eigenvalues(size(eigenvalues, 2) + 1) = A(matsize, matsize);
@@ -69,6 +80,7 @@ function [eigenvalues, errors] = eigenshifts(A)
         end
         
         % deflate matrix
+        finalMatrix(1:matsize, 1:matsize) = A;
         matsize = matsize - 1;
         A = A(1:matsize, 1:matsize);
     end
