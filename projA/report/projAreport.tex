@@ -488,4 +488,38 @@
 	both dimensions. The algorithm stops once the matrix can't be deflated any
 	further.
 	
+	\newpage
+	\subsection{Program output}
+	
+	\begin{verbatim}
+	Solution using QR without shifts:
+	   23.3571   -9.3695   -7.8773    5.0307   -1.1410
+
+	Final matrix:
+	  23.3571    0.0000   -0.0000   -0.0000    0.0000
+	   0.0000   -9.3695   -0.0000   -0.0000    0.0000
+	   0.0000   -0.0000   -7.8773    0.0000   -0.0000
+	   0.0000   -0.0000    0.0000    5.0307    0.0000
+	   0.0000    0.0000    0.0000    0.0000   -1.1410
+
+	Iteration count: 75
+	
+	Solution using QR with shifts:
+	   5.0307   -1.1410   -7.8773   -9.3695   23.3571
+
+	Final matrix:
+	  23.3571   -0.0445    0.0000    0.0000    0.0000
+	   0.0000   -9.3695    0.0000   -0.0000    0.0000
+	   0.0000   -0.0000   -7.8773    0.0000   -0.0000
+	   0.0000   -0.0000    0.0000   -1.1410    0.0000
+	   0.0000    0.0000    0.0000    0.0000    5.0307
+
+	Iteration count: 9
+	\end{verbatim}
+	
+	\subsection{Observations}
+	
+	The addition of shifting greatly improved the convergence ratio and the same
+	values could be obtained in just 9 iterations instead of 75.
+	
 \end{document}
