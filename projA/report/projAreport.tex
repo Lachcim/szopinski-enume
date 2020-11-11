@@ -112,39 +112,31 @@
 	
 	\subsection{Implementation}
 	
-	The primary medium upon which the Gaussian elimination is performed is an
-	$n$ by $(n + 1)$ matrix (where $n$ is the number of equations), which
-	simultaneously describes the coefficient matrix $A$ and the constant vector
-	$b$. This matrix is aptly named \texttt{eqsys} in the code.
+	Gaussian elimination is a process that takes a matrix describing a linear
+	equation system and returns its LU (lower-upper) decomposition, enabling the
+	system to be cheaply solved for any vector $b$. The triangular matrices $L$
+	and $U$ can be supplemented with $b$ to find the solution vector $x$ through
+	a process called back-substitution.
 	
-	In essence, the Gaussian elimination method for solving a system of linear
-	equations consists of two steps:
+	\subsubsection{LU decomposition of a matrix}
 	
-	\begin{enumerate}
-		\item \textbf{Gaussian elimination proper}, which transforms the
-		matrix $A$ into a triangular matrix; and
-		\item \textbf{Back-substitution}, which transforms the triangular
-		matrix into an identity matrix and finds the vector $x$.
-	\end{enumerate}
+	The function \texttt{gausseli} takes an equation system and returns the $L$
+	matrix, the $U$ matrix, the permutation matrix $P$ as well as a matrix
+	describing the entire system post-elimination, to be immediately handed to
+	back-substitution for the calculation of the result.
 	
-	Each of these steps is performed in a separate function.
-	
-	\subsubsection{Gaussian elimination}
-	
-	The program travels along the diagonal of \texttt{eqsys} and for each cell
-	it encounters, it eliminates (reduces to $0$) the coefficients directly
-	below it. It does so by multiplying the current row by a constant and
-	subtracting it from the rows beneath. This constant, called
-	\texttt{reductor} in the code, is given as the ratio of the cell to be
-	reduced and the current diagonal cell.
-	
-	To combat inaccuracy resulting from subsequent division, multiplication and
-	subtraction, the reduced cell is explicitly set to $0$ afterwards.
+	The elimination itself is done by traveling along the diagonal of
+	\texttt{eqsys} and for each encountered cell, eliminating (reducing to $0$)
+	the coefficients directly below it. The program does so by multiplying the
+	current row by a constant and subtracting it from the rows beneath.
+	This constant, called \texttt{reductor} in the code, is given as the
+	ratio of the cell to be reduced and the current diagonal cell. The reductor
+	is then stored in the $L$ matrix.
 	
 	\subsubsection{Partial pivoting}
 	
-	Gaussian elimination alone is prone to errors when a value on the diagonal
-	is equal to $0$ and the reductor cannot be constructed. For this reason,
+	The above algorithm alone is prone to errors when a value on the diagonal is
+	equal to $0$ and the reductor cannot be constructed. For this reason,
 	partial pivoting is added.
 	
 	For each cell on the diagonal, the program looks at the cells beneath it and
@@ -153,20 +145,31 @@
 	ensures that the divisor making up the reductor is as far from zero as
 	possible.
 	
+	Because the input matrix changes while being decomposed, a permutation
+	matrix $P$ is introduced to enable its recomposition from $L$ and $U$,
+	satisfying the equation:
+	\begin{equation}
+		LU = PA
+	\end{equation}
+	
+	Finally, the matrix $L$ is also permuted to reflect changes in the layout
+	of the system.
+	
 	\subsubsection{Back-substitution}
 	
-	Back-substitution is analogous to Gaussian elimination, except it travels
-	leftwards along the diagonal end eliminates the cells above it. In addition,
-	it performs ``normalization" of the diagonal, scaling each row so that the
-	diagonal cell is equal to $1$.
+	A triangular matrix supplied with a constant vector $b$ can be easily solved
+	by traveling along its diagonal and eliminating the factors directly above
+	the visited cell. In the end, the matrix is transformed into an identity
+	matrix and the vector alongside it is transformed into $x$.
 	
 	\subsubsection{Residual correction}
 	
-	Residual correction is a method of improving the accuracy of the results.
-	The system is solved once again, this time with $b$ replaced with the vector
-	of errors of the solution. The resulting vector $\delta x$ is then
-	subtracted from the original solution. This procedure can be repeated as
-	needed.
+	Residual correction is a method of improving the accuracy of the results
+	obtained from Gaussian elimination. By reusing the already obrained matrices
+	$L$, $U$ and $P$, the system is solved once again, this time with $b$
+	replaced with the vector of errors of the solution. The resulting vector
+	$\delta x$ is then subtracted from the previous solution. This procedure may
+	be repeated as needed.
 	
 	\subsection{Program output}
 	
@@ -250,7 +253,7 @@
 	\subsection{Observations}
 	
 	Matrices from both subtasks a and b lent themselves nicely to being solved
-	using the Gaussian elimination. Their absolute errors, when divided by the
+	using Gaussian elimination. Their absolute errors, when divided by the
 	solutions themselves, resulted in very small relative errors, nearing the
 	machine epsilon.
 	
