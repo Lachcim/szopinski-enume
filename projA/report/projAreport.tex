@@ -30,6 +30,8 @@
 		partial pivoting
 		\item Solving linear equation systems using the Jacobi and Gauss-Seidel
 		algorithms
+		\item Finding the eigenvalues of a symmetric matrix using the QR method
+		with and without shifts
 	\end{itemize}
 	
 	\newpage
@@ -417,5 +419,28 @@
 	loop, iterating infinitely in an attempt to reduce the error. This again
 	may be related to the high condition number of the matrix, or to the fact
 	that the measured error is absolute rather than relative.
+	
+	\section{Task 4: Finding the eigenvalues of a symmetric matrix using the QR
+	method}
+	
+	\subsection{Overview}
+	
+	The problem presented in this task was to find the eigenvalues of a
+	symmetric matrix by utilizing the properties of its QR decomposition. Two
+	variants of the algorithm were to be used, one with and one without shifting
+	the diagonal to accelerate the convergence. The algorithms were to be
+	iterated until the off-diagonal elements decreased below the threshold of
+	$10^{-6}$. The resultant final matrices were to be printed.
+	
+	The matrix of choice:
+	\begin{equation*}
+		\begin{bmatrix}
+			1 & 1 & 7 & 5 & 2\\
+			1 & 8 & 5 & 4 & 4\\
+			7 & 5 & 0 & 8 & 8\\
+			5 & 4 & 8 & 0 & 8\\
+			2 & 4 & 8 & 8 & 1
+		\end{bmatrix}
+	\end{equation*}
 	
 \end{document}
