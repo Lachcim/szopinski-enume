@@ -3,7 +3,10 @@
 % TASK 1
 % https://github.com/Lachcim/szopinski-enume
 
-rootbrac(@taskfunc, 2, 11)
+for bracket = rootbrac(@taskfunc, 2, 11)
+    zero = bisect(@taskfunc, bracket(1), bracket(2));
+    disp(zero);
+end
 
 % the function as given in the task
 function y = taskfunc(x)
@@ -35,4 +38,23 @@ function brackets = rootbrac(func, rangestart, rangeend)
         a = b;
         b = min(a + resolution, rangeend);
     end
+end
+
+% uses the bisection algorithm to find the root of a function within the given bracket
+function zero = bisect(func, a, b)
+    % iterate algorithm until the result range decreases below the threshold
+    while (b - a) > 1e-12
+        % calculate midpoint
+        midpoint = (a + b) / 2;
+        
+        % choose next sub-interval based on sign mismatch
+        if sign(func(a)) ~= sign(func(midpoint))
+            b = midpoint;
+        else
+            a = midpoint;
+        end
+    end
+    
+    % pick midpoint of the final range as the result
+    zero = (a + b) / 2;
 end
