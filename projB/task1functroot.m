@@ -6,6 +6,8 @@
 for bracket = rootbrac(@taskfunc, 2, 11)
     zero = bisect(@taskfunc, bracket(1), bracket(2));
     disp(zero);
+    zero2 = newton(@taskfunc, bracket(1), bracket(2));
+    disp(zero2);
 end
 
 % the function as given in the task
@@ -57,4 +59,24 @@ function zero = bisect(func, a, b)
     
     % pick midpoint of the final range as the result
     zero = (a + b) / 2;
+end
+
+% uses Newton's algorithm to find the root of a function
+function zero = newton(func, a, b)
+    % calculate square root of epsilon for derivative calculation
+    step = sqrt(eps);
+    
+    % calculate first approximation of zero - midpoint of the bracket
+    zero = (a + b) / 2;
+    
+    for n = 1:55
+        % calculate next approximation of zero
+        derivative = (func(zero + step) - func(zero - step)) / (2 * step);
+        zero = zero - func(zero) / derivative;
+        
+        % prevent divergence during approximation
+        if zero < a || zero > b
+            error('Divergent iteration');
+        end
+    end
 end
