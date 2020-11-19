@@ -4,10 +4,10 @@
 % https://github.com/Lachcim/szopinski-enume
 
 for bracket = rootbrac(@taskfunc, 2, 11)
-    zero = bisect(@taskfunc, bracket(1), bracket(2));
-    disp(zero);
-    zero2 = newton(@taskfunc, bracket(1), bracket(2));
-    disp(zero2);
+    zero = bisect(@taskfunc, bracket(1), bracket(2), 1e-15);
+    disp([zero, taskfunc(zero)]);
+    zero = newton(@taskfunc, bracket(1), bracket(2), 1e-15);
+    disp([zero, taskfunc(zero)]);
 end
 
 % the function as given in the task
@@ -43,33 +43,34 @@ function brackets = rootbrac(func, rangestart, rangeend)
 end
 
 % uses the bisection algorithm to find the root of a function within the given bracket
-function zero = bisect(func, a, b)
-    % iterate algorithm until the result range decreases below the threshold
-    while (b - a) > 1e-12
+function zero = bisect(func, a, b, tolerance)
+    % iterate algorithm until the error is within tolerance
+    while 1
         % calculate midpoint
-        midpoint = (a + b) / 2;
+        zero = (a + b) / 2;
+        
+        % stop test
+        if abs(func(zero)) <= tolerance; break; end
         
         % choose next sub-interval based on sign mismatch
-        if sign(func(a)) ~= sign(func(midpoint))
-            b = midpoint;
+        if sign(func(a)) ~= sign(func(zero))
+            b = zero;
         else
-            a = midpoint;
+            a = zero;
         end
     end
-    
-    % pick midpoint of the final range as the result
-    zero = (a + b) / 2;
 end
 
 % uses Newton's algorithm to find the root of a function
-function zero = newton(func, a, b)
+function zero = newton(func, a, b, tolerance)
     % calculate square root of epsilon for derivative calculation
     step = sqrt(eps);
     
     % calculate first approximation of zero - midpoint of the bracket
     zero = (a + b) / 2;
     
-    for n = 1:55
+    % iterate algorithm until the error is within tolerance
+    while 1
         % calculate next approximation of zero
         derivative = (func(zero + step) - func(zero - step)) / (2 * step);
         zero = zero - func(zero) / derivative;
@@ -78,5 +79,8 @@ function zero = newton(func, a, b)
         if zero < a || zero > b
             error('Divergent iteration');
         end
+        
+        % stop test
+        if abs(func(zero)) <= tolerance; break; end
     end
 end
