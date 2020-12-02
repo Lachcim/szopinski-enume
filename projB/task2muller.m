@@ -5,8 +5,8 @@
 
 % find all root brackets
 interval = [1, 7];
-brackets = rootbrac(@task2poly, interval(1), interval(2));
-[root, steps] = mm1(@task2poly, brackets(1, 1), brackets(2, 1), 1e-15);
+brackets = rootbrac(@polynomial, interval(1), interval(2));
+[root, steps] = mm1(@polynomial, brackets(1, 1), brackets(2, 1), 1e-15);
 disp(steps);
 
 % find roots of polynomial using MM1
