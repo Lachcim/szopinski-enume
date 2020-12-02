@@ -11,12 +11,12 @@ disp(steps);
 
 % find roots of polynomial using MM1
 function [zero, steps] = mm1(func, a, b, tolerance)
-    % initialize output
-    steps = double.empty(2, 0);
-    
     % define the three approximation points
     apprx = [a, b, (a + b) / 2];
     apprxval = arrayfun(func, apprx);
+    
+    % initialize output
+    steps = [apprx(3); func(apprx(3))];
     
     % iterate algorithm until the error is within tolerance
     while abs(apprx(3) - apprx(2)) > tolerance
@@ -71,12 +71,12 @@ end
 
 % find roots of polynomial using MM2
 function [approx, steps] = mm2(func, a, b, tolerance)
-    % initialize output
-    steps = double.empty(2, 0);
-    
     % define current and (dummy) previous approximation point
     approx = (a + b) / 2;
     prevapprox = approx + b - a;
+    
+    % initialize output
+    steps = [approx; func(approx)];
     
     % iterate algorithm until the error is within tolerance
     % the error is defined as the diff between the prev and the current approx
