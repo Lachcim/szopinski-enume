@@ -16,6 +16,8 @@ brackets = rootbrac(@polynomial, interval(1), interval(2));
 % find and graph real roots using both algorithms
 printroots(@polynomial, algorithms, interval, brackets, ...
     'Approximate real roots of polynomial', 'realroots');
+printcomplex(@polynomial, algorithms, [-1+i, 0], ...
+    'Approximate complex roots of polynomial', 'complexroots');
 
 % find roots of polynomial using MM1
 function [zero, steps] = mm1(func, a, b, tolerance)
