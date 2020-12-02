@@ -6,7 +6,7 @@
 % find all root brackets
 interval = [1, 7];
 brackets = rootbrac(@polynomial, interval(1), interval(2));
-[root, steps] = mm1(@polynomial, brackets(1, 1), brackets(2, 1), 1e-15);
+[root, steps] = mm2(@polynomial, brackets(1, 1), brackets(2, 1), 1e-15);
 disp(steps);
 
 % find roots of polynomial using MM1
@@ -67,4 +67,52 @@ function [zero, steps] = mm1(func, a, b, tolerance)
         apprx(3) = newapprx;
         apprxval = arrayfun(func, apprx);
     end
+end
+
+% find roots of polynomial using MM2
+function [approx, steps] = mm2(func, a, b, tolerance)
+    % initialize output
+    steps = double.empty(2, 0);
+    
+    % define current and (dummy) previous approximation point
+    approx = (a + b) / 2;
+    prevapprox = approx + b - a;
+    
+    % iterate algorithm until the error is within tolerance
+    % the error is defined as the diff between the prev and the current approx
+    while abs(approx - prevapprox) > tolerance
+        % calculate approximating parabola using first and second derivative
+        c = func(approx);
+        b = deriv(func, approx, 1);
+        a = deriv(func, approx, 2) / 2;
+        
+        % find roots of parabola
+        zplus = -2 * c / (b + sqrt(b ^ 2 - 4 * a * c));
+        zminus = -2 * c / (b - sqrt(b ^ 2 - 4 * a * c));
+        
+        % choose root closer to current approximation
+        if abs(zplus) < abs(zminus)
+            newapprox = approx + zplus;
+        else
+            newapprox = approx + zminus;
+        end
+        
+        % update answer and prev approx
+        prevapprox = approx;
+        approx = newapprox;
+        steps(:, size(steps, 2) + 1) = [approx, func(approx)];
+    end
+end
+
+% calculate the nth derivative of func at x
+function y = deriv(func, x, deg)
+    % base case: zeroth derivative
+    if deg == 0
+        y = func(x);
+        return
+    end
+    
+    % recurse to find the nth derivative
+    step = sqrt(eps);
+    y = (deriv(func, x + step, deg - 1) - deriv(func, x - step, deg - 1)) / (2 * step);
 end
