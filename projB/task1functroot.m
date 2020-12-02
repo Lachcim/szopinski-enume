@@ -13,41 +13,9 @@ algorithms = {
 interval = [2, 11];
 brackets = rootbrac(@taskfunc, interval(1), interval(2));
 
-% perform task for all available algorithms
-for alg = 1:size(algorithms, 1)
-    [algname, algfunc] = algorithms{alg, :};
-    
-    % plot function inside interval
-    figure;
-    grid on;
-    hold on;
-    title(['Approximate zeros of function (', algname, ')']);
-    set(gca, 'XAxisLocation', 'origin');
-    x = interval(1):0.05:interval(2);
-    y = arrayfun(@taskfunc, x);
-    plot(x, y);
-    
-    % iterate over root brackets
-    for bracket = brackets    
-        % find all zeros within the bracket using the given algorithm
-        [zero, steps] = algfunc(@taskfunc, bracket(1), bracket(2), 1e-15);
-        
-        % plot steps on graph
-        xline(bracket(1), 'color', [0.5, 0.5, 0.5]);
-        xline(bracket(2), 'color', [0.5, 0.5, 0.5]);
-        scatter(steps(1, 2:end), steps(2, 2:end), [], [0.929, 0.694, 0.125]);
-        scatter(steps(1, 1), steps(2, 1), [], [0.635, 0.078, 0.184]);
-        text(steps(1, 1), steps(2, 1), 'start', ...
-            'HorizontalAlignment', 'center', ...
-            'VerticalAlignment', 'top');
-    end
-    
-    % finish and print graph
-    hold off;
-    set(gcf, 'PaperPosition', [0 0 6 4]);
-    set(gcf, 'PaperSize', [6 4]);
-    print(['report/', func2str(algfunc), 'zeros'], '-dpdf');
-end
+% find and graph zeros using both algorithms
+printroots(@taskfunc, algorithms, interval, brackets, ...
+    'Approximate zeros of function', 'zeros');
 
 % the function as given in the task
 function y = taskfunc(x)

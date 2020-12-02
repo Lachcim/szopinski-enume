@@ -3,11 +3,19 @@
 % TASK 2
 % https://github.com/Lachcim/szopinski-enume
 
-% find all root brackets
+% define available algorithms
+algorithms = {
+    'MM1', @mm1;
+    'MM2', @mm2
+};
+
+% find all real root brackets
 interval = [1, 7];
 brackets = rootbrac(@polynomial, interval(1), interval(2));
-[root, steps] = mm2(@polynomial, brackets(1, 1), brackets(2, 1), 1e-15);
-disp(steps);
+
+% find and graph real roots using both algorithms
+printroots(@polynomial, algorithms, interval, brackets, ...
+    'Approximate real roots of polynomial', 'realroots');
 
 % find roots of polynomial using MM1
 function [zero, steps] = mm1(func, a, b, tolerance)
