@@ -241,4 +241,53 @@
 	A good general root-finding algorithm should use a mixture of both methods,
 	resorting to the slower one when the faster one fails.
 	
+	\newpage
+	
+	\section{Task 2: Finding the real and complex roots of a polynomial}
+	
+	\subsection{Overview}
+	
+	The goal of this task was to find the real and complex roots of the
+	following polynomial:
+	\begin{equation*}
+		f(x) = x^4 - 7 x^3 - 4 x^2 + 2 x + 9
+	\end{equation*}
+	This was to be accomplished using both versions of M{\"u}ller's method
+	known as MM1 and MM2. In addition, the real roots of the polynomial were to
+	be found using Newton's	algorithm.
+	
+	\subsection{Implementation}
+	
+	\subsubsection{Bracketing}
+	
+	Because any bracket-finding algorithm is heuristic in nature and there's no
+	guarantee that it will identify all existing brackets, an empirical analysis
+	of the polynomial was performed to approximate its roots.
+	
+	The previously mentioned algorithm was used to find the polynomial's real
+	root brackets within the interval $[1; 7]$. However, the complex root evaded
+	algorithmic detection and its bracket had to be hardcoded as $[-1 + i; 0]$.
+	
+	\subsubsection{MM1}
+	
+	M{\"u}ller's method 1 is an interval-based iterative algorithm which is
+	similar in operation to the so-called method of splines. The spline method
+	draws a line connecting the intersection of the function with the currently
+	considered interval boundaries and calculates its intersection with the
+	x-axis, determining the boundary of the new interval.
+	
+	MM1 expands this idea by approximating the polynomial with a quadratic
+	function rather than a linear one, yielding better results. This also
+	enables the algorithm to find the complex roots of the polynomial, provided
+	a complex arithmetic is used. Roots found in this way come in complex
+	conjugate pairs.
+	
+	\subsubsection{MM2}
+	
+	The MM2 variant is identical in principle to MM1, except that it uses the
+	polynomial's first and second derivatives to calculate the approximating
+	parabola, which is minor performance improvement. Being a
+	point-of-inquiry-based algorithm, it implements a stop test identical to
+	that used in Newton's algorithm.
+	
 \end{document}
