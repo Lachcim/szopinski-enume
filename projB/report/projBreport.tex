@@ -226,4 +226,19 @@
 	\includegraphics[width=\textwidth]{bisectzeros}
 	\includegraphics[width=\textwidth]{newtonzeros}
 	
+	\subsection{Observations}
+	
+	The self-evident observation is that the bisection method is excruciatingly
+	slow compared to Newton's method, achieving in 50 iterations what Newton's
+	algorithm was able to achieve in just 7.
+
+	One remark which cannot be concluded from this experiment is that the
+	bisection method is globally convergent, whereas Newton's algorithm only
+	converges to a finite value within a specific sphere of convergence around
+	the known root. As a matter of fact, given the right circumstances, Newton's
+	algorithm may even diverge to infinity.
+	
+	A good general root-finding algorithm should use a mixture of both methods,
+	resorting to the slower one when the faster one fails.
+	
 \end{document}
