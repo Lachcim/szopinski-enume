@@ -34,4 +34,49 @@
 	
 	\newpage
 	
+	\section{Task 1: Finding the zeros of an arbitrary function}
+	
+	\subsection{Overview}
+	
+	In this task, the zeros of the following function were to be found:
+	\begin{align*}
+		f(x) = 0.7 x \cos(x) - \ln(x + 1) && x \in [2; 11]
+	\end{align*}
+	This was to be done using the bisection method and Newton's algorithm.
+	
+	\subsection{Implementation}
+	
+	\subsubsection{Bracketing}
+	
+	The basis for finding the roots of a function within a given interval is a
+	heuristic algorithm which finds the function's \textit {root brackets},
+	i.e. the regions where root-finding algorithms converge to an answer.
+	
+	In this project, bracketing was implemented by dividing the original search
+	interval into 10 sub-intervals and checking the sign of the function at
+	each of the sub-invervals' boundaries. A sign mismatch signalizes that the
+	function crosses the x-axis somewhere within the interval, which can then
+	be passed to a root-finding algorithm.
+	
+	\subsubsection{Bisection}
+	
+	Bisection is the simplest of root-finding algorithms. It can be thought of
+	as a variation of the bracketing method. The original root bracket is
+	divided into two sub-intervals and the next interval to be considered is
+	chosen based on sign mismatch, implementing a ``binary search" type of
+	approach. This step is repeated until the considered interval is
+	sufficiently narrow.
+	
+	\subsubsection{Newton's method}
+	
+	A much more advanced algorithm is known as Newton's method. This method
+	uses a linear approximation of the function at the given inquiry point to
+	predict where the function may be zero. The next inquiry point is given as
+	the intersection of the current tangent line and the x-axis.
+	
+	Because Newton's algorithm isn't strictly interval-based, a speed-based
+	stop test has to be implemented. The test analyzes the distance between the
+	current and the previous inquiry point and stops the algorithm when it is
+	sufficiently small.
+	
 \end{document}
