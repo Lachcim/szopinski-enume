@@ -31,6 +31,11 @@ function printroots(func, algorithms, interval, brackets, plottitle, outputsuffi
             text(steps(1, 1), steps(2, 1), 'start', ...
                 'HorizontalAlignment', 'center', ...
                 'VerticalAlignment', 'top');
+                
+        % print root table
+        disp([plottitle, ' (', algname, ')']);
+        columns = {'step', 'root', 'value at root'};
+        disp(table([1:size(steps, 2)]', steps(1, :)', steps(2, :)', 'VariableNames', columns));
         end
         
         % finish and print graph
