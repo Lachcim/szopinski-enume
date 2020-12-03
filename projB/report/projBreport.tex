@@ -34,7 +34,8 @@
 	
 	\newpage
 	
-	\section{Task 1: Finding the zeros of an arbitrary function}
+	\section{Task 1: Finding the zeros of an arbitrary function using bisection
+	and Newton's method}
 	
 	\subsection{Overview}
 	
@@ -243,7 +244,8 @@
 	
 	\newpage
 	
-	\section{Task 2: Finding the real and complex roots of a polynomial}
+	\section{Task 2: Finding the real and complex roots of a polynomial using
+	M{\"u}ller's method}
 	
 	\subsection{Overview}
 	
@@ -416,5 +418,79 @@
 	M{\"u}ller's, 2 for Newton's). That said, MM2 has the obvious advantage of
 	being able to find complex roots as well as real roots, to the latter of
 	which Newton's method is limited.
+	
+	\newpage
+	\section{Task 3: Finding the real and complex roots of a polynomial using
+	Laguerre's method}
+	
+	\subsection{Overview}
+	
+	Task 2 was to be repeated using Laguerre's algorithm.
+	
+	\subsection{Implementation}
+	
+	Laguerre's algorithm is nearly identical to the MM2 algorithm, except that
+	it implements a custom formula for calculating the next point of inquiry,
+	which takes into account the order of the polynomial.
+	
+	\subsection{Program output}
+	
+	\subsubsection{Comparison of Laguerre's method and MM2}
+	
+	\begin{multicols}{2}
+		\begin{verbatim}
+			Laguerre's algorithm
+			step     root     value at root
+			 1         1.9          -7.7409
+			 2      1.6111         0.070341
+			 3      1.6141       7.0457e-06
+			 4      1.6141      -2.3448e-13
+			 5      1.6141       1.7764e-15
+			 6      1.6141       1.7764e-15
+			 
+			 1         6.1          -34.243
+			 2      6.2931           3.8249
+			 3      6.2753        -0.010849
+			 4      6.2754       2.7981e-07
+			 5      6.2754       9.0594e-14
+			 6      6.2754       9.0594e-14
+			 
+			 1         -0.5±0.5i     6.6002
+			 2 -0.44301±0.82854i    0.07705
+			 3 -0.44475±0.83109i 5.4048e-06
+			 4 -0.44475±0.83109i 7.2709e-14
+			 5 -0.44475±0.83109i 6.6613e-16
+			 6 -0.44475±0.83109i 6.6613e-16
+		\end{verbatim}
+		\begin{verbatim}
+			MM2
+			step     root     value at root
+			 1         1.9          -7.7409
+			 2      1.6079           0.1425
+			 3      1.6141       0.00014476
+			 4      1.6141      -5.0846e-11
+			 5      1.6141       1.7764e-15
+			 6      1.6141       1.7764e-15
+			 
+			 1         6.1          -34.243
+			 2      6.2931           3.8249
+			 3      6.2753         -0.01103
+			 4      6.2754      -9.1773e-09
+			 5      6.2754       1.2079e-13
+			 6      6.2754       9.0594e-14
+			 
+			 1         -0.5±0.5i     6.6002
+			 2 -0.43179±0.82848i    0.32746
+			 3 -0.44475±0.83109i 9.1408e-05
+			 4 -0.44475±0.83109i 8.0852e-12
+			 5 -0.44475±0.83109i 6.6613e-16
+			 6 -0.44475±0.83109i 6.6613e-16
+		\end{verbatim}
+	\end{multicols}
+	
+	\subsubsection{Function plot with marked zeros}
+	
+	\includegraphics[width=\textwidth]{laguerrerealroots}
+	\includegraphics[width=\textwidth]{laguerrecomplexroots}
 	
 \end{document}
