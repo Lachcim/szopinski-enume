@@ -34,5 +34,10 @@ function printcomplex(func, algorithms, bracket, plottitle, outputsuffix)
         set(gcf, 'PaperPosition', [0 0 6 4]);
         set(gcf, 'PaperSize', [6 4]);
         print(['report/', func2str(algfunc), outputsuffix], '-dpdf');
+        
+        % print root table
+        disp([plottitle, ' (', algname, ')']);
+        columns = {'step', 'root', 'abs value at root'};
+        disp(table([1:size(steps, 2)]', steps(1, :)', abs(steps(2, :))', 'VariableNames', columns));
     end
 end
