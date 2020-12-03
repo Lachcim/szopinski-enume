@@ -36,14 +36,18 @@ function [zero, steps] = mm1(func, a, b, tolerance)
         diff0 = apprxval(1) - apprxval(3);
         diff1 = apprxval(2) - apprxval(3);
 
-        % solve equation system
-        eqsysleft = [z0 ^ 2, z0; z1 ^ 2, z1];
-        eqsysright = [diff0; diff1];
-        eqsyssol = eqsysleft \ eqsysright;
+        % solve equation system using Gaussian elimination (spaghetti code but fast)
+        eqsys = [z0 ^ 2, z0, diff0; z1 ^ 2, z1, diff1];
+        reductor = eqsys(2, 1) / eqsys(1, 1);
+        eqsys(2, :) = eqsys(2, :) - reductor * eqsys(1, :);
+        eqsys(2, 1) = 0;
+        eqsys(2, :) = eqsys(2, :) ./ eqsys(2, 2);
+        eqsys(1, :) = eqsys(1, :) - eqsys(1, 2) * eqsys(2, :);
+        eqsys(1, :) = eqsys(1, :) ./ eqsys(1, 1);
 
         % define approximation parabola
-        a = eqsyssol(1);
-        b = eqsyssol(2);
+        a = eqsys(1, 3);
+        b = eqsys(2, 3);
         c = apprxval(3);
 
         % find roots of parabola
