@@ -24,6 +24,31 @@ taskfunc(:, 2) = [
     -30.7795
 ];
 
+% perform the task
+for polydeg = 0:3
+    % obtain factors of approximating polynomial
+    factors = approximate(taskfunc, polydeg);
+    
+    % plot data points
+    figure;
+    grid on;
+    hold on;
+    title(['Polynomial approximation of the function (degree ', ...
+        num2str(polydeg), ')']);
+    scatter(taskfunc(:, 1), taskfunc(:, 2));
+    
+    % plot approximation
+    x = taskfunc(1):0.05:taskfunc(end, 1);
+    y = evalapprox(factors, x);
+    plot(x, y);
+    
+    % finish and print graph
+    hold off;
+    set(gcf, 'PaperPosition', [0 0 6 4]);
+    set(gcf, 'PaperSize', [6 4]);
+    print(['report/approx', num2str(polydeg)], '-dpdf');
+end
+
 % find the approximating polynomial of the given degree
 function factors = approximate(func, polydeg)
     % define the A matrix used for calculating Gram's matrix
@@ -41,4 +66,15 @@ function factors = approximate(func, polydeg)
     eqsys = R(1:size(R, 2), :);
     eqsys(:, end + 1) = Q' * func(:, 2);
     factors = backsubst(eqsys);
+end
+
+% evaluate the value of an approximation at the given x
+function y = evalapprox(factors, xarray)
+    y = zeros(1, size(xarray, 2));
+    
+    for xi = 1:size(xarray, 2)
+        for i = 1:size(factors, 1)
+            y(xi) = y(xi) + factors(i) * xarray(xi) ^ (i - 1);
+        end
+    end
 end
