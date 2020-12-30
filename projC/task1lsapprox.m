@@ -25,7 +25,7 @@ taskfunc(:, 2) = [
 ];
 
 % find the approximating polynomial of the given degree
-function approx = approximate(func, polydeg)
+function factors = approximate(func, polydeg)
     % define the A matrix used for calculating Gram's matrix
     A = zeros(size(func, 1), polydeg + 1);
     
@@ -36,7 +36,9 @@ function approx = approximate(func, polydeg)
         end
     end
     
-    % transform A into a system of equations
-    eqsys = A' * A;
-    eqsys(:, end + 1) = A' * func(:, 2);
+    % solve least-square problem using QR decomposition
+    [Q, R] = qrdecomp(A);
+    eqsys = R(1:size(R, 2), :);
+    eqsys(:, end + 1) = Q' * func(:, 2);
+    factors = backsubst(eqsys);
 end
