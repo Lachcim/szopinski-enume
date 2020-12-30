@@ -3,6 +3,11 @@
 % TASK 1
 % https://github.com/Lachcim/szopinski-enume
 
+% use functions from project A if not present in the working directory
+if ~exist('qrdecomp', 'var')
+    addpath('../projA');
+end
+
 % define function data points
 taskfunc = (-5:5)';
 taskfunc(:, 2) = [
