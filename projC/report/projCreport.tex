@@ -1,0 +1,111 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{multicol}
+\setlength{\parskip}{1em}
+
+\begin{document}
+
+	\title{ENUME project report\\Project C: least-squares approximation \\
+	and solving systems of differential equations}
+	\author{Michał Szopiński\\\\
+	https://github.com/Lachcim/szopinski-enume\\
+	Project number 60}
+	\date{January 3, 2021}
+	\maketitle
+	
+	\numberwithin{equation}{section}
+	
+	\setcounter{section}{-1}
+	\section{Abstract}
+	
+	This project explores the numerical methods of function approximation
+	and dynamic system analysis. The following concepts are discussed within
+	this document:
+	
+	\begin{itemize}
+		\item Performing the approximation of a function given by a set of
+		discrete data points by a polynomial function of a given degree
+		using the least-squares approach
+		\item Determining the trajectory of an object whose motion is
+		defined by a set of ordinary differential equations
+	\end{itemize}
+	
+	\newpage
+	
+	\section{Task 1: Least-squares approximation}
+	
+	\subsection{Overview}
+	
+	The goal of this task was to find the approximation of a function given
+	by a set of data points. The approximating function was to be a
+	polynomial of varying degree (several degrees were to be tested). The
+	least-squares problem was to be solved using QR factorization.
+	
+	\subsection{Implementation}
+	
+	\subsubsection{Finding the vector $\widehat{a}$}
+	
+	The approximating function is given by:
+	\begin{equation}
+		a_0 + a_1x + a_2x^2 + a_3x^3 + \ldots + a_nx^n = 0
+	\end{equation}
+	where $n$ is the degree of the approximating polynomial. The goal of the
+	approximation is to find a vector $\widehat{a} = [ a_0; a_1; \ldots;
+	a_n ]$ such that:
+	\begin{equation}
+		(\forall{a \in \mathbb{R}^n})\quad
+		\left\Vert y - A\widehat{a} \right\Vert_2 \leq
+		\left\Vert y - Aa \right\Vert_2
+	\end{equation}
+	where $A\widehat{a}$ forms the vector of values of the approximating
+	function at each data point, and $y$ is the vector of the values of the
+	data points. In other words, the goal is to minimize the Euclidean norm
+	of the difference between the approximating function and the data
+	points.
+	
+	The most optimal vector $\widehat{a}$ can be obtained by calculating the
+	derivative of the error function with respect to $a_n$ and equating it
+	to zero. The resulting system of equations, called the
+	\textit{normal equations}, has a unique solution: the vector
+	$\widehat{a}$.
+	
+	\subsubsection{Solving normal equations using QR decomposition}
+	
+	Although this system could be solved directly using Gaussian elimination
+	or an iterative method, the matrix describing this system, called Gram's
+	matrix, tends to have a high condition number, which limits the accuracy
+	of the solution. For this reason, the matrix $A$ is defined:
+	\begin{equation}
+		A = \begin{bmatrix}
+			1 & x_0 & (x_0)^2 & (x_0)^3 & \dots & (x_0)^n \\
+			1 & x_1 & (x_1)^2 & (x_1)^3 & \dots & (x_1)^n \\
+			1 & x_2 & (x_2)^2 & (x_2)^3 & \dots & (x_2)^n \\
+			\vdots & \vdots & \vdots & \vdots & \ddots & \vdots \\
+			1 & x_N & (x_N)^2 & (x_N)^3 & \dots & (x_N)^n
+		\end{bmatrix}
+	\end{equation}
+	where $x_N$ is the x-axis position of the $N$-th data point. The system
+	of natural equations can then be expressed in terms of $A$ as follows:
+	\begin{equation}
+		(A^TA)\widehat{a} = A^Ty
+	\end{equation}
+	The condition number of $A$ is equal to the square root of the condition
+	number of the original Gram's matrix, which yields better numerical
+	properties. Furthermore, this form lends itself nicely to being solved
+	using QR factorization of $A$:
+	\begin{equation}
+		(R^TQ^T)(QR)\widehat{a} = (R^TQ^T)y
+	\end{equation}
+	By observing that $Q^TQ = I$ and $\det{R} \neq 0$, this equation can be
+	further reduced to:
+	\begin{equation}
+		R\widehat{a} = Q^Ty
+		\label{eq:rq}
+	\end{equation}
+	Because $R$ is an upper triangular matrix, the equation~\ref{eq:rq} can
+	be easily solved using back-substitution.
+	
+\end{document}
