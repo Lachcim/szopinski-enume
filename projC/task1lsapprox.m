@@ -27,7 +27,12 @@ taskfunc(:, 2) = [
 % perform the task
 for polydeg = 0:3
     % obtain factors of approximating polynomial
-    factors = approximate(taskfunc, polydeg);
+    [factors, error, gramcond] = approximate(taskfunc, polydeg);
+    
+    % print error and condition number
+    disp(['Approximation degree ', num2str(polydeg), ':']);
+    disp(['Error: ', num2str(error)]);
+    disp(['Condition number: ', num2str(gramcond)]);
     
     % plot data points
     figure;
@@ -50,8 +55,8 @@ for polydeg = 0:3
 end
 
 % find the approximating polynomial of the given degree
-function factors = approximate(func, polydeg)
-    % define the A matrix used for calculating Gram's matrix
+function [factors, error, gramcond] = approximate(func, polydeg)
+    % define the A matrix used for solving the error minimization problem
     A = zeros(size(func, 1), polydeg + 1);
     
     % calculate cells of A using natural basis
@@ -66,6 +71,10 @@ function factors = approximate(func, polydeg)
     eqsys = R(1:size(R, 2), :);
     eqsys(:, end + 1) = Q' * func(:, 2);
     factors = backsubst(eqsys);
+    
+    % calculate error and condition number of Gram's matrix
+    error = norm(func(:, 2) - A * factors);
+    gramcond = cond(A' * A);
 end
 
 % evaluate the value of an approximation at the given x
