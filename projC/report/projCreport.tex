@@ -103,9 +103,59 @@
 	further reduced to:
 	\begin{equation}
 		R\widehat{a} = Q^Ty
+	\end{equation}
+	As an optimization, the QR decomposition can be replaced with a $\bar{Q}
+	\bar{R}$ decomposition, which is faster to calculate:
+	\begin{equation}
+		\bar{R}\widehat{a} = (\bar{Q}^T\bar{Q})^{-1}(\bar{Q}^T)y
 		\label{eq:rq}
 	\end{equation}
-	Because $R$ is an upper triangular matrix, the equation~\ref{eq:rq} can
+	Because $\bar{R}$ is an upper triangular matrix, the equation~\ref{eq:rq} can
 	be easily solved using back-substitution.
+	
+	\subsubsection{Performing the $\bar{Q}\bar{R}$ decomposition of a
+	matrix}
+	
+	The $\bar{Q}\bar{R}$ decomposition is done using the modified
+	Gram-Schmidt algorithm. The decomposing function returns
+	$(\bar{Q}^T\bar{Q})^{-1}$ as part of its output and the final
+	normalization subroutine used for ordinary QR decomposition is skipped.
+	
+	\subsection{Program output}
+	
+	\subsubsection{Approximating function plots}
+	
+	\includegraphics[width=\textwidth]{approx0}
+	\includegraphics[width=\textwidth]{approx1}
+	\includegraphics[width=\textwidth]{approx2}
+	\includegraphics[width=\textwidth]{approx3}
+	
+	\subsubsection{Approximation errors and Gram's matrix condition number}
+	
+	\begin{center}
+		\begin{tabular}{|c|r|r|} 
+			\hline
+			Degree & Error & Condition number \\
+			\hline
+			0 & 26.9222 & 1 \\
+			1 & 24.5645 & 10 \\
+			2 & 5.3885 & 408.7796 \\
+			3 & 0.8872 & 8558.4366 \\
+			\hline
+		\end{tabular}
+	\end{center}
+	
+	\subsection{Observations}
+	
+	Increasing the degree of the approximating polynomial made it possible
+	to obtain a better approximation, i.e. one with a lower Euclidean norm
+	error. By degree 3, the polynomial approximated the data points nearly
+	perfectly and further approximation yielded no significant improvements.
+	
+	Higher polynomial degrees also caused the condition number of the Gram's
+	matrix to rise exponentially. This problem was mitigated by implementing
+	the QR decomposition of the matrix A, which made it possible to
+	calculate the solution to the set on normal equations with a better
+	accuracy.
 	
 \end{document}
