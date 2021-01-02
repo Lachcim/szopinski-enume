@@ -66,10 +66,9 @@ function [factors, error, gramcond] = approximate(func, polydeg)
         end
     end
     
-    % solve least-square problem using QR decomposition
-    [Q, R] = qrdecomp(A);
-    eqsys = R(1:size(R, 2), :);
-    eqsys(:, end + 1) = Q' * func(:, 2);
+    % solve least-square problem using QRdash decomposition
+    [Q, eqsys, invqtq] = qrdecomp(A, true);
+    eqsys(:, end + 1) = invqtq * Q' * func(:, 2);
     factors = backsubst(eqsys);
     
     % calculate error and condition number of Gram's matrix
