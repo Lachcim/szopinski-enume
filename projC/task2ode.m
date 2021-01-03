@@ -10,7 +10,7 @@ sysfuncts = {
 };
 initvalues = [0; 12];
 
-rk4(sysfuncts, initvalues, 0, 15, 0.01)
+rk4(sysfuncts, initvalues, 0, 15, 0.013408);
 
 function x = rk4(functs, init, a, b, stepsize)
     % set initial values as start points of output
