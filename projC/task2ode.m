@@ -10,7 +10,13 @@ sysfuncts = {
 };
 initvalues = [0; 12];
 
-rk4auto(sysfuncts, initvalues, 0, 15, 0.013408);
+[r, sizes, errors] = rk4auto(sysfuncts, initvalues, 0, 15, 1e-5, 10e-10, 10e-10);
+figure;
+plot(r(2, :), r(3, :));
+figure;
+plot(r(1, 2:(end - 1)), sizes);
+figure;
+plot(r(1, 2:(end - 1)), errors);
 
 % solve ODE system using RK4 with constant step size
 function x = rk4(functs, init, a, b, stepsize)
@@ -35,10 +41,14 @@ function x = rk4(functs, init, a, b, stepsize)
 end
 
 % automatic step size variant of RK4
-function x = rk4auto(functs, init, a, b, initstep)
+function [x, sizes, errors] = rk4auto(functs, init, a, b, initstep, eps_rel, eps_abs)
     % set start points of output
     args = a;
     x = init;
+    
+    % initialize output plots
+    sizes = double.empty();
+    errors = double.empty();
     
     % integrate function until end of interval reached
     stepsize = initstep;
@@ -53,11 +63,39 @@ function x = rk4auto(functs, init, a, b, initstep)
             % generic single-step iteration
             phi = rk4phi(functs{eqnum}, stepval, stepsize);
             x(eqnum, step + 1) = x(eqnum, step) + stepsize * phi;
-            args(step + 1) = args(step) + stepsize;
         end
         
         % stop algorithm if function integrated over the whole interval
+        args(step + 1) = args(step) + stepsize;
         if args(end) >= b; break; end
+        
+        % also calculate next step using two half-steps
+        for substep = 1:2
+            for eqnum = 1:size(functs, 1)
+                phi = rk4phi(functs{eqnum}, stepval, stepsize / 2);
+                stepval(eqnum) = stepval(eqnum) + (stepsize / 2) * phi;
+            end
+        end
+        
+        % calculate step correction factor
+        alpha = Inf;
+        for eqnum = 1:size(functs, 1)
+            % calculate approximation error
+            delta = abs(stepval(eqnum) - x(eqnum, step + 1)) / 15;
+            errors(step) = delta;
+            
+            % calculate equation-specific alpha
+            epsilon = abs(stepval(eqnum)) * eps_rel + eps_abs;
+            eqalpha = epsilon / delta;
+            
+            % minimum alpha wins
+            if eqalpha < alpha; alpha = eqalpha; end
+        end
+        alpha = alpha ^ (1/5);
+        
+        % correct step size with safety factor
+        stepsize = 0.9 * alpha * stepsize;
+        sizes(step) = stepsize;
     end
     
     % append arguments to output
