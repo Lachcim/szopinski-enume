@@ -3,12 +3,12 @@
 % https://github.com/Lachcim/szopinski-enume
 
 % solve ODE system using RK4 with constant step size
-function x = rk4(functs, init, a, b, stepsize)
+function x = rk4(functs, init, interval, stepsize)
     % set initial values as start points of output
     x = init;
     
     % build output based on preceding values
-    stepcount = ceil((b - a) / stepsize);
+    stepcount = ceil((interval(2) - interval(1)) / stepsize);
     for step = 1:stepcount
         % obtain the preceding function values
         stepval = x(:, step);
@@ -21,5 +21,5 @@ function x = rk4(functs, init, a, b, stepsize)
     end
     
     % append arguments to output
-    x = [a:stepsize:(stepcount * stepsize); x];
+    x = [interval(1):stepsize:(stepcount * stepsize); x];
 end

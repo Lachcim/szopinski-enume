@@ -3,9 +3,9 @@
 % https://github.com/Lachcim/szopinski-enume
 
 % automatic step size variant of RK4
-function [x, sizes, errors] = rk4auto(functs, init, a, b, initstep, eps_rel, eps_abs)
+function [x, sizes, errors] = rk4auto(functs, init, interval, initstep, eps_rel, eps_abs)
     % set start points of output
-    args = a;
+    args = interval(1);
     x = init;
     
     % initialize output plots
@@ -29,7 +29,7 @@ function [x, sizes, errors] = rk4auto(functs, init, a, b, initstep, eps_rel, eps
         
         % stop algorithm if function integrated over the whole interval
         args(step + 1) = args(step) + stepsize;
-        if args(end) >= b; break; end
+        if args(end) >= interval(2); break; end
         
         % also calculate next step using two half-steps
         for substep = 1:2
