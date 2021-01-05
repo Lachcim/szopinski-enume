@@ -31,5 +31,38 @@ for alg = 1:size(algorithms, 1)
             result};
     end
     
-    disp(stepresults);
+    % plot each component against time
+    for eqnum = 1:size(sysfuncts, 1)
+        % begin plot
+        figure; grid on; hold on;
+        title([algname, ', x_', num2str(eqnum), ' against time']);
+        set(gcf, 'PaperPosition', [0 0 6 4]);
+        set(gcf, 'PaperSize', [6 4]);
+        
+        % plot component for each step size
+        for stepresult = stepresults'
+            plot(stepresult{3}(1, :), stepresult{3}(eqnum + 1, :));
+        end
+        
+        % finish plot
+        hold off;
+        legend(stepresults{:, 2});
+        print(['report/', func2str(algfunc), 'x', num2str(eqnum)], '-dpdf');
+    end
+    
+    % plot first two components against each other
+    figure; grid on; hold on;
+    title([algname, ' trajectory plot (x_2 against x_1)']);
+    set(gcf, 'PaperPosition', [0 0 6 4]);
+    set(gcf, 'PaperSize', [6 4]);
+    
+    % plot for each step size
+    for stepresult = stepresults'
+        plot(stepresult{3}(2, :), stepresult{3}(3, :));
+    end
+    
+    % finish plot
+    hold off;
+    legend(stepresults{:, 2});
+    print(['report/', func2str(algfunc), 'traj'], '-dpdf');
 end
