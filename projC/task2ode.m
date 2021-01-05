@@ -66,3 +66,29 @@ for alg = 1:size(algorithms, 1)
     legend(stepresults{:, 2});
     print(['report/', func2str(algfunc), 'traj'], '-dpdf');
 end
+
+% solve ODE using RK4 with automatic step size
+[result, sizes, errors] = rk4auto(sysfuncts, initvalues, interval, ...
+    1e-5, 10e-10, 10e-10);
+
+% plot trajectory
+figure;
+plot(result(2, :), result(3, :));
+grid on;
+title('RK4 auto-step trajectory plot (x_2 against x_1)');
+print(['report/', 'rk4autotraj'], '-dpdf');
+
+% plot statistics
+stats = {
+    "RK4 auto-step step size", "rk4sizes", sizes;
+    "RK4 auto-step approximation error", "rk4errors", errors
+};
+for stat = stats'
+    figure;
+    plot(result(1, 2:(end - 1)), stat{3});
+    grid on;
+    title(stat{1});
+    set(gcf, 'PaperPosition', [0 0 6 4]);
+    set(gcf, 'PaperSize', [6 4]);
+    print(strcat("report/", stat{2}), '-dpdf');
+end
