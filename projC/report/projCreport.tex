@@ -30,7 +30,8 @@
 		discrete data points by a polynomial function of a given degree
 		using the least-squares approach
 		\item Determining the trajectory of an object whose motion is
-		defined by a set of ordinary differential equations
+		defined by a set of ordinary differential equations using the RK4
+		and Adams PC algorithms
 	\end{itemize}
 	
 	\newpage
@@ -110,8 +111,8 @@
 		\bar{R}\widehat{a} = (\bar{Q}^T\bar{Q})^{-1}(\bar{Q}^T)y
 		\label{eq:rq}
 	\end{equation}
-	Because $\bar{R}$ is an upper triangular matrix, the equation~\ref{eq:rq} can
-	be easily solved using back-substitution.
+	Because $\bar{R}$ is an upper triangular matrix, the
+	equation~\ref{eq:rq} can be easily solved using back-substitution.
 	
 	\subsubsection{Performing the $\bar{Q}\bar{R}$ decomposition of a
 	matrix}
@@ -157,5 +158,66 @@
 	the QR decomposition of the matrix A, which made it possible to
 	calculate the solution to the set on normal equations with a better
 	accuracy.
+	
+	\newpage
+	\section{Task 2a: Trajectory calculation using fixed-step algorithms}
+	
+	\subsection{Overview}
+	
+	In this task, the goal was to compute the trajectory of an object whose
+	motion is described by a system of differential equations:
+	\begin{gather*}
+		\begin{cases}
+			\frac{dx_1}{dt} = x_2 + x_1(\frac{1}{2} - x_1^2 - x_2^2)\\
+			\frac{dx_2}{dt} = -x_1 + x_2(\frac{1}{2} - x_1^2 - x_2^2)
+		\end{cases}\\
+		t \in [0; 15]\\
+		x_1(0) = 0\\
+		x_2(0) = 12
+	\end{gather*}
+	The system was to be solved using two fixed-step algorithms, RK4 and
+	Adams PC ($P_5EC_5E$). Two step sizes were to be chosen -- an ``optimal"
+	one and a larger, visibly differing one.
+	
+	\subsection{Implementation}
+	
+	Numerical methods of solving systems of differential equations involve
+	computing the value of the solution for a set of arguments belonging to
+	the prescribed interval. Based on a vector of initial values and a set
+	of functions describing the derivative of the solution, the output is
+	computed by integrating the derivative over a small interval, in this
+	context called a step.
+	
+	These algorithms can be divided into single-step and multi-step methods.
+	Single-step methods only consider one preceding data point of the
+	solution to calculate the next point, whereas multi-step algorithms
+	consider multiple predecessors.
+	
+	\subsubsection{4\textsuperscript{th}-order Runge-Kutta method (RK4)}
+	
+	A single iteration of any single-step method can be described by the
+	following formula:
+	\begin{equation}
+		y_{n + 1} = y_n + h\Phi_f(x_n; y_n; h)
+	\end{equation}
+	Where $y$ is the output solution vector, $x$ is the argument vector and
+	$h$ is the step size. The function $\Phi_f$ is specific to the applied
+	algorithm and it uses the provided data to calculate the next output
+	data point.
+	
+	The RK4 algorithm is defined as follows:
+	\begin{align}
+		\begin{split}
+			\Phi_f(x_n; y_n; h) &= \frac{1}{6}(k_1 + k_2 + k_3 + k_4)\\
+			k_1 &= f(x_n, y_n)\\
+			k_2 &= f(x_n + \frac{h}{2}, y_n + \frac{h}{2}k_1)\\
+			k_3 &= f(x_n + \frac{h}{2}, y_n + \frac{h}{2}k_2)\\
+			k_4 &= f(x_n + h, y_n + hk_3)
+		\end{split}
+	\end{align}
+	This algorithm is fairly simple to implement and produces visually
+	acceptable results. Because neither the system nor the algorithm utilize
+	the argument vector $x$, this parameter tends to be omitted in the
+	implementation.
 	
 \end{document}
