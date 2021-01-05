@@ -220,4 +220,36 @@
 	the argument vector $x$, this parameter tends to be omitted in the
 	implementation.
 	
+	\subsection{Program output}
+	
+	\subsubsection{RK4 solution plots}
+	\includegraphics[width=\textwidth]{rk4x1}
+	\includegraphics[width=\textwidth]{rk4x2}
+	\includegraphics[width=\textwidth]{rk4traj}
+	
+	\newpage
+	\subsection{Observations}
+	
+	For the Runge-Kutta method, the ``optimal" step size was 0.01, whereas
+	the largest feasible step size obtainable was 0.013408. Above this
+	limit, the integration diverged to the point where the trajectory
+	coordinates quickly reached infinity.
+	
+	Analysis of the $x_2$ function reveals that it is extremely steep in the
+	neighborhood of the initial conditions, reaching a derivative of -1722
+	in the first iteration:
+	\includegraphics[width=\textwidth]{x_2gradient}
+	For this reason, the resulting trajectory graph is much denser (in terms
+	of data points) near the final spiral than it is in the initial entry
+	path.
+	
+	In comparison, the $x_1$ component is relatively flat in the
+	neighborhood of the trajectory, with an initial derivative of 12:\\
+	\includegraphics[width=\textwidth]{x_1gradient}
+	
+	This behavior likely serves to illustrate the necessity of the Lipschitz
+	condition for the integrability of a function. An infinitely steep
+	function cannot be integrated over a finite step, with additional
+	limitations superimposed by the machine precision of the computing
+	system.
 \end{document}
