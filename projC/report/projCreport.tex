@@ -252,4 +252,59 @@
 	function cannot be integrated over a finite step, with additional
 	limitations superimposed by the machine precision of the computing
 	system.
+	
+	\newpage
+	\section{Task 2b: Trajectory calculation using variable-step RK4}
+	
+	\subsection{Overview}
+	
+	This variant of the previous task aims to reimplement the RK4 algorithm
+	with a variable step size determined by the double-step error
+	estimation. The step size and the error estimation were to be plotted
+	against time.
+	
+	\subsection{Implementation}
+	
+	There exists an inherent conflict of interest between decreasing the
+	step size and increasing it -- smaller steps give more accurate results,
+	but they increase computation time and accumulate floating-point errors.
+	To solve this problem, the RK4 algorithm can be altered to dynamically
+	change the step size so as to achieve a predetermined desired accuracy,
+	in this case, a relative error of $10^{-10}$.
+	
+	To do so, the algorithm estimates the current approximation error on
+	each step and calculates the step scaling factor $\alpha$. The error is
+	estimated using the double-step method, where each iteration is computed
+	with a single full-sized step and two half-sized steps. Its value is
+	given by:
+	\begin{equation}
+		\delta_n(h) = \frac{y^{(2)}_n - y^{(1)}_n}{2^p - 1}
+	\end{equation}
+	where $y^{(q)}$ denotes the solution obtained after $q$ subsequent
+	$\frac{1}{q}$-steps. The error of a single step multiplied by $\alpha$
+	is equal to:
+	\begin{equation}
+		\delta_n(\alpha h) = \alpha^{p + 1} \cdot \delta_n(h)
+	\end{equation}
+	If $\delta_n(\alpha h)$ is substituted for the desired error
+	$\varepsilon$, the above two equations can be combined to obtain:
+	\begin{equation}
+		\alpha = \left(\frac{\varepsilon}{\delta_n(h)}\right)
+		^\frac{1}{p + 1}
+	\end{equation}
+	Finally, because $\varepsilon$ and $\delta_n$ are absolute errors, the
+	desired error can be formulated in terms of a relative and an absolute
+	input parameter:
+		\begin{equation}
+		\alpha = \left(\frac
+		{|y^{(2)}_n| \cdot \varepsilon_{rel} + \varepsilon_{abs}}
+		{|\delta_n(h)|}\right)
+		^\frac{1}{p + 1}
+	\end{equation}
+	Lastly, the obtained scaling factor $\alpha$ is multiplied by a safety
+	factor of 0.9 to account for errors in the error estimation itself.
+	
+	A flowchart of the variable-stepped RK4 algorithm:\\
+	\includegraphics[width=\textwidth]{flowchart}
+	
 \end{document}
