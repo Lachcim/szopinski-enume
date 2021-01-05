@@ -76,6 +76,8 @@ figure;
 plot(result(2, :), result(3, :));
 grid on;
 title('RK4 auto-step trajectory plot (x_2 against x_1)');
+set(gcf, 'PaperPosition', [0 0 6 4]);
+set(gcf, 'PaperSize', [6 4]);
 print(['report/', 'rk4autotraj'], '-dpdf');
 
 % plot statistics
