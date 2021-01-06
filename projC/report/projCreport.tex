@@ -261,7 +261,8 @@
 	This variant of the previous task aims to reimplement the RK4 algorithm
 	with a variable step size determined by the double-step error
 	estimation. The step size and the error estimation were to be plotted
-	against time.
+	against time. Finally, the results were to be compared against a
+	solution obtained with ODE45.
 	
 	\subsection{Implementation}
 	
@@ -306,5 +307,33 @@
 	
 	A flowchart of the variable-stepped RK4 algorithm:\\
 	\includegraphics[width=\textwidth]{flowchart}
+	
+	\subsection{Program output}
+	
+	\includegraphics[width=\textwidth]{rk4autotraj}
+	\includegraphics[width=\textwidth]{rk4sizes}
+	\includegraphics[width=\textwidth]{rk4errors}
+	\includegraphics[width=\textwidth]{ode45}
+	
+	\newpage
+	\subsection{Observations}
+	
+	The variable-step Runge-Kutta method provided an optimal solution
+	visually identical to that returned by Matlab's ODE45. As seen on the
+	step size plot, the step size was automatically increased for regions
+	with greater derivatives and decreased where the functions changed
+	slowly.
+	
+	The approximation error plot reveals that the algorithm succeeded in
+	maintaining an absolute error of $10^{-10}$. The only anomaly visible
+	at the start of the plot resulted from a poorly chosen initial step
+	size.
+	
+	Although the typical specification of a variable-step RK4 algorithm
+	calls for the implementation of a minimal step size $h_{min}$, this was
+	unnecessary for the purpose of this experiment -- the function was
+	successfully graphed with the desired accuracy. A more generic
+	implementation could benefit from an $h_{min}$ that would prevent
+	prohibitive computation times.
 	
 \end{document}

@@ -94,3 +94,15 @@ for stat = stats'
     set(gcf, 'PaperSize', [6 4]);
     print(strcat("report/", stat{2}), '-dpdf');
 end
+
+% compare results with ODE45
+odefun = @(t, x) [ sysfuncts{1}(x); sysfuncts{2}(x) ];
+odeoptions = odeset('RelTol', 10e-10, 'AbsTol', 10e-10);
+[t, x] = ode45(odefun, interval, initvalues, odeoptions);
+figure;
+plot(x(:, 1), x(:, 2));
+grid on;
+title('ODE45 trajectory plot (x_2 against x_1)');
+set(gcf, 'PaperPosition', [0 0 6 4]);
+set(gcf, 'PaperSize', [6 4]);
+print('report/ode45', '-dpdf');
