@@ -14,6 +14,7 @@ interval = [0; 15];
 % define available algorithms
 algorithms = {
     'RK4', @rk4, [0.01, 0.013408];
+    'Adams PC', @adamspc, [0.002, 0.01305]
 };
 
 % solve ODE using different algorithms and step sizes
