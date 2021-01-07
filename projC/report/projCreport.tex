@@ -13,7 +13,7 @@
 	\author{Michał Szopiński\\\\
 	https://github.com/Lachcim/szopinski-enume\\
 	Project number 60}
-	\date{January 3, 2021}
+	\date{January 7, 2021}
 	\maketitle
 	
 	\numberwithin{equation}{section}
@@ -220,6 +220,33 @@
 	the argument vector $x$, this parameter tends to be omitted in the
 	implementation.
 	
+	\subsubsection{Adams PC method ($P_5EC_5E$)}
+	
+	Adams predictor-corrector is a much more complicated, multi-step method
+	which uses which uses the following algorithm:
+	\begin{enumerate}
+		\item Predict:
+			\begin{equation*}
+				y^{[0]}_n = y_{n - 1} + h\sum_{j=1}^{5}\beta_j f_{n-j}
+			\end{equation*}
+		\item Evaluate:
+			\begin{equation*}
+				f^{[0]}_n = f(x_n, y^{[0]}_n)
+			\end{equation*}
+		\item Correct:
+			\begin{equation*}
+				y_n = y_{n - 1} + h\sum_{j=1}^{5}\beta^*_j f_{n-j}
+				+ h\beta^*_0f^{[0]}_n
+			\end{equation*}
+		\item Evaluate:
+			\begin{equation*}
+				f_n = f(x_n, y_n)
+			\end{equation*}
+	\end{enumerate}
+	This algorithm serves to efficiently implement the implicit Adams
+	method. The predictor helps to do so by choosing a suitable starting
+	point.
+	
 	\subsection{Program output}
 	
 	\subsubsection{RK4 solution plots}
@@ -227,13 +254,19 @@
 	\includegraphics[width=\textwidth]{rk4x2}
 	\includegraphics[width=\textwidth]{rk4traj}
 	
+	\subsubsection{Adams PC solution plots}
+	\includegraphics[width=\textwidth]{adamspcx1}
+	\includegraphics[width=\textwidth]{adamspcx2}
+	\includegraphics[width=\textwidth]{adamspctraj}
+	
 	\newpage
 	\subsection{Observations}
 	
 	For the Runge-Kutta method, the ``optimal" step size was 0.01, whereas
 	the largest feasible step size obtainable was 0.013408. Above this
 	limit, the integration diverged to the point where the trajectory
-	coordinates quickly reached infinity.
+	coordinates quickly reached infinity. Adams PC exhibited similar
+	behavior for step sizes above 0.01305.
 	
 	Analysis of the $x_2$ function reveals that it is extremely steep in the
 	neighborhood of the initial conditions, reaching a derivative of -1722
